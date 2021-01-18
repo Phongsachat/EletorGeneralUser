@@ -82,7 +82,7 @@ class SignInView extends StatelessWidget {
                                               child: Column(
                                                 children: [
                                                   SizedBox(width: 30, height: 50),
-                                                  googleSignInButton(vm2)
+                                                  googleSignInButton(vm2,states)
                                                 ],
                                               ))
                                         ],
@@ -110,7 +110,7 @@ class SignInView extends StatelessWidget {
   }
 
 
-  RoundedIconButton googleSignInButton(SignInViewModel vm2) {
+  RoundedIconButton googleSignInButton(SignInViewModel vm2,states) {
     return RoundedIconButton(
       text: StringValue.googleSignIn,
       icons: Image.asset(
@@ -121,12 +121,14 @@ class SignInView extends StatelessWidget {
       padding: EdgeInsets.all(5),
       height: 50,
       onTap: () async {
-        EasyLoading.show();
+        //EasyLoading.show();
+        states.showLoading();
 
         await vm2.signIn();
 
         if (await vm2.registerUser(vm2.user.providerData.first)) {
-          EasyLoading.dismiss();
+          //EasyLoading.dismiss();
+          states.dismissLoading();
 
           String imageUrl = vm2.user.photoURL;
           String username = vm2.user.displayName;
