@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "947968230344",
+    "project_id": "eletor-e20d1",
+    "storage_bucket": "eletor-e20d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947968230344:android:bdeff3b068a7072d16f6fd",
+        "android_client_info": {
+          "package_name": "com.elephant.EletorGeneral"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947968230344-7bm509ph3avkv3t0tm406eaj4o7b5np4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.elephant.EletorGeneral",
+            "certificate_hash": "1e6e525c5df81882d6562e266db8a7d7b4fd0720"
+          }
+        },
+        {
+          "client_id": "947968230344-ad4j23krk0rhr3k8m7dggtsqrh540mjm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvxvsVrxq8mTd-jPigJtF3KElt3rXGiwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "947968230344-ad4j23krk0rhr3k8m7dggtsqrh540mjm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
