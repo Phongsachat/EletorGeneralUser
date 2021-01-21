@@ -38,10 +38,13 @@ class HomeViewModel extends BaseViewModel {
   }
 
   init() async {
-    String authKey = SharedPreferenceUtils.getString(Values.authenicized_key);
-    UserIdModel userIdModel = UserIdModel(userId: authKey);
-    print(authKey);
-    // await getUserInformation(userIdModel);
+    try{
+      String authKey = SharedPreferenceUtils.getString(Values.authenicized_key);
+      UserIdModel userIdModel = UserIdModel(userId: authKey);
+      // await getUserInformation(userIdModel);
+    }catch(error){
+      print("Error Init home view model $error");
+    }
   }
 
   changeHomeState(bool homeState) {
@@ -50,22 +53,30 @@ class HomeViewModel extends BaseViewModel {
   }
 
   saveUserInfo(String displayName, String image) async {
-    SharedPreferenceUtils.setString(Values.displayName, displayName);
-    SharedPreferenceUtils.setString(Values.photoURL, image);
+    try{
+      SharedPreferenceUtils.setString(Values.displayName, displayName);
+      SharedPreferenceUtils.setString(Values.photoURL, image);
+    }catch(error){
+      print("Error save user info: $error");
+    }
   }
 
   checkingWasJoinMission(String missionId) async {
-    _fireStoreAttendants = FireStoreUtils("/mission/$missionId/attendants");
-    CollectionReference collAttendantsRef =
-        _fireStoreAttendants.createCollectionRef();
+    try{
+      _fireStoreAttendants = FireStoreUtils("/mission/$missionId/attendants");
+      CollectionReference collAttendantsRef =
+      _fireStoreAttendants.createCollectionRef();
 
-    String uid = SharedPreferenceUtils.getString(Values.authenicized_key);
-    DocumentSnapshot docRef = await collAttendantsRef.doc(uid).get();
+      String uid = SharedPreferenceUtils.getString(Values.authenicized_key);
+      DocumentSnapshot docRef = await collAttendantsRef.doc(uid).get();
 
-    if (docRef.exists)
-      _isJoinMission = true;
-    else
-      _isJoinMission = false;
-    notifyListeners();
+      if (docRef.exists)
+        _isJoinMission = true;
+      else
+        _isJoinMission = false;
+      notifyListeners();
+    }catch(error){
+      print("Error checked join mission: $error");
+    }
   }
 }

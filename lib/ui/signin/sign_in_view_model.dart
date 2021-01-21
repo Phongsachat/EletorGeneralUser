@@ -55,11 +55,15 @@ class SignInViewModel extends BaseViewModel {
   }
 
   init() async {
-    await Firebase.initializeApp();
-    _googleSignIn = GoogleSignIn();
-    _user = FirebaseAuth.instance.currentUser;
-    setCurrentUser();
-    notifyListeners();
+    try{
+      await Firebase.initializeApp();
+      _googleSignIn = GoogleSignIn();
+      _user = FirebaseAuth.instance.currentUser;
+      setCurrentUser();
+      notifyListeners();
+    }catch(error){
+      print("Error init sign in view model: $error");
+    }
   }
 
   setCurrentUser() {
@@ -68,14 +72,18 @@ class SignInViewModel extends BaseViewModel {
   }
 
   signIn() async {
-    GoogleSignInAccount account = await _googleSignIn.signIn();
+    try{
+      GoogleSignInAccount account = await _googleSignIn.signIn();
 
-    AuthenticationGoogleSignIn _auth = AuthenticationGoogleSignIn(account);
-    await _auth.initializeAuth();
-    _user = await _auth.userInfo;
-
-    _signInSuccess(!(user.isNull));
-    notifyListeners();
+      AuthenticationGoogleSignIn _auth = AuthenticationGoogleSignIn(account);
+      await _auth.initializeAuth();
+      _user = await _auth.userInfo;
+      print("_user : $_user");
+      _signInSuccess(!(user.isNull));
+      notifyListeners();
+    }catch(error){
+      print("Error sign in: $error");
+    }
   }
 
   _signInSuccess(bool signInSuccess) {
@@ -87,12 +95,12 @@ class SignInViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  signOut() async {
-    await _googleSignIn.signOut();
-    _user = null;
-    _loginStatus = false;
-    notifyListeners();
-  }
+  // signOut() async {
+  //   await _googleSignIn.signOut();
+  //   _user = null;
+  //   _loginStatus = false;
+  //   notifyListeners();
+  // }
 /*
   authenticizedUser(String username, String password) async {
 
@@ -111,15 +119,23 @@ class SignInViewModel extends BaseViewModel {
   }
 */
   saveSharePref(String value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(Values.authenicized_key, value);
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString(Values.authenicized_key, value);
+    }catch(error){
+      print("Error save shared authentication key: $error");
+    }
   }
 
   _checkAuthentication() async {
-    SharedPreferences prefs = await SharedPreferenceUtils.initialize();
-    if (prefs.getString(Values.authenicized_key) != null){
-      _authenticated = true;
-      notifyListeners();
+    try{
+      SharedPreferences prefs = await SharedPreferenceUtils.initialize();
+      if (prefs.getString(Values.authenicized_key) != null){
+        _authenticated = true;
+        notifyListeners();
+      }
+    }catch(error){
+      print("Error check authentication: $error");
     }
   }
 /*
@@ -131,8 +147,12 @@ class SignInViewModel extends BaseViewModel {
 */
 
   saveUserInfo(String displayName ,String image)async{
-    SharedPreferenceUtils.setString(Values.displayName, displayName);
-    SharedPreferenceUtils.setString(Values.photoURL, image);
+    try{
+      SharedPreferenceUtils.setString(Values.displayName, displayName);
+      SharedPreferenceUtils.setString(Values.photoURL, image);
+    }catch(error){
+      print("Error save user info: $error");
+    }
   }
   // showLoading() {
   //   log("showLoading Active", name: 'showLoading');
@@ -149,18 +169,22 @@ class SignInViewModel extends BaseViewModel {
   // }
 
   Future<bool> registerUser(UserInfo userInfo) async {
-    UserInfoAccount infoAcc = UserInfoAccount(
-        displayName: userInfo.displayName,
-        email: userInfo.email,
-        phoneNumber: userInfo.phoneNumber ?? 0,
-        photoURL: userInfo.photoURL,
-        uid: userInfo.uid);
+    try{
+      UserInfoAccount infoAcc = UserInfoAccount(
+          displayName: userInfo.displayName,
+          email: userInfo.email,
+          phoneNumber: userInfo.phoneNumber ?? 0,
+          photoURL: userInfo.photoURL,
+          uid: userInfo.uid);
 
-    print("serInfo.uid: ${userInfo.uid}");
-    BaseModel<ResponseRegisterModel> response = await _userApi.register(infoAcc);
+      print("serInfo.uid: ${userInfo.uid}");
+      BaseModel<ResponseRegisterModel> response = await _userApi.register(infoAcc);
 
-    if (response.data.status == 200) return true;
-    return false;
+      if (response.data.status == 200) return true;
+      return false;
+    }catch(error){
+      print("Error register user: $error");
+    }
   }
 
   User get user => _user;

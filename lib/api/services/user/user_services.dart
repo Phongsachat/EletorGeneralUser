@@ -12,7 +12,7 @@ import 'package:retrofit/retrofit.dart';
 
 part 'user_services.g.dart';
 
-@RestApi(baseUrl: BaseUrl.eletorHeroku)
+@RestApi(baseUrl: BaseUrl.itUrl)
 abstract class UserServices {
   factory UserServices(Dio dio) = _UserServices;
 

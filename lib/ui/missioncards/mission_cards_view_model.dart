@@ -1,4 +1,3 @@
-
 import 'package:Eletor/utils/googles/firestore.dart';
 import 'package:Eletor/utils/shared_preference.dart';
 import 'package:Eletor/utils/values.dart';
@@ -20,11 +19,11 @@ class MissionCardsViewModel extends ChangeNotifier {
 
   bool _isJoinMissionLoading = true;
 
-  bool _isGetAttendantSuccess=false;
+  bool _isGetAttendantSuccess = false;
 
   String _missionID;
 
-  FireStoreUtils _fireStoreComment,_fireStoreAttendants;
+  FireStoreUtils _fireStoreComment, _fireStoreAttendants;
 
   List<Marker> _myMarker = [];
 
@@ -52,105 +51,125 @@ class MissionCardsViewModel extends ChangeNotifier {
 
   MissionCardsViewModel();
 
-  init({String missionID}) async{
+  init({String missionID}) async {
+    try {
+      _fireStoreComment =
+          FireStoreUtils("/comments/$missionID/MissionComments");
+      _fireStoreAttendants = FireStoreUtils("/mission/$missionID/attendants");
 
-   _fireStoreComment = FireStoreUtils("/comments/$missionID/MissionComments");
-   _fireStoreAttendants = FireStoreUtils("/mission/$missionID/attendants");
-
-    await getAttendants();
-    await getComments();
-   setMissionID(missionID);
+      await getAttendants();
+      await getComments();
+      setMissionID(missionID);
+    } catch (error) {
+      print("Error init mission cards: $error");
+    }
   }
 
-  getComments() async{
+  getComments() async {
+    try{
+      var lengthDocsOfCollect = await _fireStoreComment.createCollectionRef()
+          .get()
+          .then((value) => value.docs.length);
 
-    var lengthDocsOfCollect = await _fireStoreComment.createCollectionRef().get().then((value) => value.docs.length);
-
-    if(lengthDocsOfCollect==0){
-
-      _isLoading = false;
-      _haveAnyComment = false;
-
-    }else{
-
-      QuerySnapshot querySnapshot = await _fireStoreComment.orderByTimeStamp();
-      var mapComments = querySnapshot.docs.map((doc) => doc.data());
-
-      _commentLength = mapComments.length;
-
-      if(mapComments.isNotEmpty && !_haveAnyComment){
-        _commentsList.clear();
-        await pushComments(mapComments);
-        _haveAnyComment = true;
+      if (lengthDocsOfCollect == 0) {
         _isLoading = false;
+        _haveAnyComment = false;
+      } else {
+        QuerySnapshot querySnapshot = await _fireStoreComment.orderByTimeStamp();
+        var mapComments = querySnapshot.docs.map((doc) => doc.data());
+
+        _commentLength = mapComments.length;
+
+        if (mapComments.isNotEmpty && !_haveAnyComment) {
+          _commentsList.clear();
+          await pushComments(mapComments);
+          _haveAnyComment = true;
+          _isLoading = false;
+        }
       }
-    }
 
 
-  notifyListeners();
-  }
-
-  pushComments(var mapComments) async{
-
-    /// comments in The CommendCard only have 2 comments
-    int lengthComment = mapComments.length;
-
-    /*** length of comment is can be 1 which require dynamic length
-     * The CommentCard only need 2 comments list
-     * */
-    if(mapComments.length>2) lengthComment = 2;
-
-    /// A Loop for add comment data to _commentList variable
-    for(int i=0;i<lengthComment;i++){
-
-      /// Get name of user from FireStore which ['ref] ['displayName'] ['comment'] are Document Field
-      String displayName =  await mapComments.toList()[i]['ref'].get().then((doc)=>doc.data()["displayName"]);
-      String comment = mapComments.toList()[i]['comment'];
-
-      /// Add comment and displayName
-      _commentsList.add([displayName,comment]);
+      notifyListeners();
+    }catch(error){
+      print("Error get comments: $error");
     }
   }
 
-  setMissionID(String missionID){
+  pushComments(var mapComments) async {
+
+    try{
+      /// comments in The CommendCard only have 2 comments
+      int lengthComment = mapComments.length;
+
+      /*** length of comment is can be 1 which require dynamic length
+       * The CommentCard only need 2 comments list
+       * */
+      if (mapComments.length > 2) lengthComment = 2;
+
+      /// A Loop for add comment data to _commentList variable
+      for (int i = 0; i < lengthComment; i++) {
+
+        /// Get name of user from FireStore which ['ref] ['displayName'] ['comment'] are Document Field
+        String displayName = await mapComments.toList()[i]['ref'].get().then((
+            doc) => doc.data()["displayName"]);
+        String comment = mapComments.toList()[i]['comment'];
+
+        /// Add comment and displayName
+        _commentsList.add([displayName, comment]);
+      }
+    }catch(error){
+      print("Error push comment: $error");
+    }
+  }
+
+  setMissionID(String missionID) {
     _missionID = missionID;
     notifyListeners();
   }
 
-  getAttendants() async{
+  getAttendants() async {
+    try{
+      _imgOfficerList.clear();
+      List<QueryDocumentSnapshot> queryDocsSnapShot = await _fireStoreAttendants
+          .createCollectionRef().get().then((value) => value.docs);
 
-    _imgOfficerList.clear();
-   List<QueryDocumentSnapshot> queryDocsSnapShot =  await _fireStoreAttendants.createCollectionRef().get().then((value) => value.docs);
+      int lengthDocs = queryDocsSnapShot.asMap().length;
 
-   int lengthDocs = queryDocsSnapShot.asMap().length;
-
-   for(int i=0;i<lengthDocs;i++){
-     DocumentSnapshot docsSnapShot = await queryDocsSnapShot.asMap()[i].data()['uid'].get();
-     _imgOfficerList.add(docsSnapShot.data()['photoURL']);
-   }
-    notifyListeners();
+      for (int i = 0; i < lengthDocs; i++) {
+        DocumentSnapshot docsSnapShot = await queryDocsSnapShot.asMap()[i].data()['uid'].get();
+        _imgOfficerList.add(docsSnapShot.data()['photoURL']);
+      }
+      notifyListeners();
+    }catch(error){
+      print("Error get attendants: $error");
+    }
   }
 
-  joinMission(String missionId) async{
+  joinMission(String missionId) async {
+   try{
+     Query query = FirebaseFirestore.instance.collection("/mission").where(
+         "missionId", isEqualTo: missionID);
 
-   Query query = FirebaseFirestore.instance.collection("/mission").where("missionId",isEqualTo: missionID);
+     String uid = SharedPreferenceUtils.getString(Values.authenicized_key);
+     CollectionReference collRef = FirebaseFirestore.instance.collection(
+         "/mission");
+     DocumentReference uidRef = FirebaseFirestore.instance.doc("/users/$uid");
 
-   String uid = SharedPreferenceUtils.getString(Values.authenicized_key);
-  CollectionReference collRef =  FirebaseFirestore.instance.collection("/mission");
-    DocumentReference uidRef = FirebaseFirestore.instance.doc("/users/$uid");
+     await query.get().then((value) async {
+       await collRef.doc(missionId).collection("attendants").doc(uid).set({
+         "isAccept": true,
+         "isSuccess": false,
+         "uid": uidRef
+       }).then((value) {
+         _isJoinMissionLoading = false;
+       });
+     }).catchError((error) {
+       print("error:: $error");
+     });
 
-   await query.get().then((value) async {
-     await collRef.doc(missionId).collection("attendants").doc(uid).set({
-          "isAccept":true,
-          "isSuccess":false,
-          "uid":uidRef
-      }).then((value) {
-      _isJoinMissionLoading = false;
-    });
-   }).catchError((error){
-     print("error:: $error");
-   });
-
-   notifyListeners();
+     notifyListeners();
+   }catch(error){
+     print("Error join mission: $error");
+   }
   }
 }

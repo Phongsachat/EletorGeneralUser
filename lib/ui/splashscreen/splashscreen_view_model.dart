@@ -24,13 +24,17 @@ class SplashScreenViewModel extends BaseViewModel {
 
 
   checkAuthentication() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if(prefs.containsKey(Values.authenicized_key)){
-      if (prefs.getString(Values.authenicized_key).isNotEmpty){
-        _authenticated = true;
-        notifyListeners();
+      if(prefs.containsKey(Values.authenicized_key)){
+        if (prefs.getString(Values.authenicized_key).isNotEmpty){
+          _authenticated = true;
+          notifyListeners();
+        }
       }
+    }catch(error){
+      print("Error check authentication: $error");
     }
   }
 

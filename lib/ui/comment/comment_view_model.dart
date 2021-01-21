@@ -55,29 +55,41 @@ class CommentViewModel extends BaseViewModel {
   CommentViewModel();
 
   init({String missionID}) async {
-    _fireStoreUtils = FireStoreUtils("/comments/$missionID/MissionComments");
-    getComments();
-    await getPhotoURL();
-    _missionID = missionID;
+   try{
+     _fireStoreUtils = FireStoreUtils("/comments/$missionID/MissionComments");
+     getComments();
+     await getPhotoURL();
+     _missionID = missionID;
+   }catch(error){
+     print("Error init comment view model: $error");
+   }
   }
 
   getComments() async {
-    QuerySnapshot querySnapshot = await _fireStoreUtils.orderByTimeStamp();
+    try{
+      QuerySnapshot querySnapshot = await _fireStoreUtils.orderByTimeStamp();
 
-    var mapDocsComment = querySnapshot.docs.map((doc) => doc.data());
+      var mapDocsComment = querySnapshot.docs.map((doc) => doc.data());
 
-    if (mapDocsComment.isNotEmpty) {
-      _haveAnyComment = true;
-      _commentLength = mapDocsComment.length;
-      notifyListeners();
+      if (mapDocsComment.isNotEmpty) {
+        _haveAnyComment = true;
+        _commentLength = mapDocsComment.length;
+        notifyListeners();
+      }
+    }catch(error,stacker){
+      print("Error Get comments: $error");
     }
   }
 
   getPhotoURL() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    _photoURL = pref.getString(Values.photoURL ?? StringValue.http_unknown);
-    _displayName = pref.getString(Values.displayName ?? StringValue.unknown);
-    _userId = pref.getString(Values.authenicized_key);
+    try{
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      _photoURL = pref.getString(Values.photoURL ?? StringValue.http_unknown);
+      _displayName = pref.getString(Values.displayName ?? StringValue.unknown);
+      _userId = pref.getString(Values.authenicized_key);
+    }catch(error){
+      print("Error Get PhotoURL $error");
+    }
   }
 
   bool confirmComment(String comment) {
@@ -94,6 +106,7 @@ class CommentViewModel extends BaseViewModel {
 
       return true;
     } catch (error) {
+      print("Error confirm comment $error");
       return false;
     }
   }

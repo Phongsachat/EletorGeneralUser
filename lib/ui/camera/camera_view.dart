@@ -174,7 +174,8 @@ class CameraView extends StatelessWidget {
                           height: MediaQuery.of(context).size.height / 10,
                           child: Icon(Icons.send_rounded)),
                       onTap: () {
-                        if(vm2.isConnected){
+                        // isConnected!!!
+                        if(true){
                           states.initState();
                           Get.to(CameraSendMission(username: username,imageUrl: imageUrl));
                         }else{

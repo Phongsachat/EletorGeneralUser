@@ -253,7 +253,8 @@ class HomeView extends StatelessWidget {
                                                                   onTap:
                                                                       () async {
 
-                                                                    if(vm2.isConnected){
+                                                                    // isConnected!!!
+                                                                    if(true){
                                                                       vm1.changeHomeState(
                                                                           false);
 

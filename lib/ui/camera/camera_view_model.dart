@@ -118,50 +118,66 @@ class CameraViewModel extends BaseViewModel {
   }
 
   openGallery(BuildContext context) async {
-    var pickedFile = await _picker.getImage(source: ImageSource.gallery);
-    _imagesFile = File(pickedFile.path);
-    Navigator.of(context).pop();
-    notifyListeners();
+    try {
+      var pickedFile = await _picker.getImage(source: ImageSource.gallery);
+      _imagesFile = File(pickedFile.path);
+      Navigator.of(context).pop();
+      notifyListeners();
+    } catch (error) {
+      print("Error openGallery: $error");
+    }
   }
 
   openCamera(BuildContext context) async {
-    var pickedFile = await _picker.getImage(source: ImageSource.camera);
-    _imagesFile = File(pickedFile.path);
-    Navigator.of(context).pop();
-    notifyListeners();
+    try {
+      var pickedFile = await _picker.getImage(source: ImageSource.camera);
+      _imagesFile = File(pickedFile.path);
+      Navigator.of(context).pop();
+      notifyListeners();
+    } catch (error) {
+      print("Error openCamera: $error");
+    }
   }
 
   location() async {
-    var position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    try {
+      var position = await GeolocatorPlatform.instance
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-    ///Global LatLng
-    _lat = position.latitude;
-    _lng = position.longitude;
+      ///Global LatLng
+      _lat = position.latitude;
+      _lng = position.longitude;
 
-    ///User LatLng
-    _userLat = position.latitude;
-    _userLng = position.longitude;
-    _latLng = LatLng(position.latitude, position.longitude);
-    loadingValue();
-    locationName();
-    goToMe();
-    print("location() working");
-    notifyListeners();
+      ///User LatLng
+      _userLat = position.latitude;
+      _userLng = position.longitude;
+      _latLng = LatLng(position.latitude, position.longitude);
+      loadingValue();
+      locationName();
+      goToMe();
+      print("location() working");
+      notifyListeners();
+    } catch (error) {
+      print("Error location $error");
+    }
   }
 
-  loadingValue(){
+  loadingValue() {
     _loading = false;
     notifyListeners();
   }
 
   locationName() async {
-    _placemarks = await placemarkFromCoordinates(_lat, _lng);
-    _textLocationName.text = _placemarks[0].street.toString();
-    maxLength(_textLocationName);
-    await textLocationNameValue(_placemarks[0].street.toString());
-    print("locationName :"+_placemarks[0].street.toString());
-    notifyListeners();
+    try {
+      _placemarks = await placemarkFromCoordinates(_lat, _lng);
+      _textLocationName.text = _placemarks[0].street.toString();
+      maxLength(_textLocationName);
+      await textLocationNameValue(_placemarks[0].street.toString());
+      print("locationName :" + _placemarks[0].street.toString());
+      notifyListeners();
+    } catch (error) {
+      print("Error location name: $error");
+    }
   }
 
   textLocationNameValue(String placemarks) {
@@ -170,113 +186,133 @@ class CameraViewModel extends BaseViewModel {
   }
 
   favoriteLocation(value, context) {
-    _favoriteLocationValue = value;
-    switch (_favoriteLocationValue) {
-      case 1:
-        {
-          location();
-          maxLength(_textLocationName);
-        }
-        break;
-      case 2:
-        {
-          _textLocationName.text = StringValue.favoriteLocationValue1;
-          _lat = _favoriteLocationLatLng[0].latitude;
-          _lng = _favoriteLocationLatLng[0].longitude;
-          maxLength(_textLocationName);
-        }
-        break;
-      case 3:
-        {
-          _textLocationName.text = StringValue.favoriteLocationValue2;
-          _lat = _favoriteLocationLatLng[1].latitude;
-          _lng = _favoriteLocationLatLng[1].longitude;
-          maxLength(_textLocationName);
-        }
-        break;
-      case 4:
-        {
-          _textLocationName.text = StringValue.favoriteLocationValue3;
-          _lat = _favoriteLocationLatLng[2].latitude;
-          _lng = _favoriteLocationLatLng[2].longitude;
-          maxLength(_textLocationName);
-        }
-        break;
-      case 5:
-        {
-          _textLocationName.text = StringValue.favoriteLocationValue4;
-          _lat = _favoriteLocationLatLng[3].latitude;
-          _lng = _favoriteLocationLatLng[3].longitude;
-          maxLength(_textLocationName);
-        }
-        break;
-      default:
-        {
-          print("favotiteLocation = 6");
-        }
-        break;
+    try {
+      _favoriteLocationValue = value;
+      switch (_favoriteLocationValue) {
+        case 1:
+          {
+            location();
+            maxLength(_textLocationName);
+          }
+          break;
+        case 2:
+          {
+            _textLocationName.text = StringValue.favoriteLocationValue1;
+            _lat = _favoriteLocationLatLng[0].latitude;
+            _lng = _favoriteLocationLatLng[0].longitude;
+            maxLength(_textLocationName);
+          }
+          break;
+        case 3:
+          {
+            _textLocationName.text = StringValue.favoriteLocationValue2;
+            _lat = _favoriteLocationLatLng[1].latitude;
+            _lng = _favoriteLocationLatLng[1].longitude;
+            maxLength(_textLocationName);
+          }
+          break;
+        case 4:
+          {
+            _textLocationName.text = StringValue.favoriteLocationValue3;
+            _lat = _favoriteLocationLatLng[2].latitude;
+            _lng = _favoriteLocationLatLng[2].longitude;
+            maxLength(_textLocationName);
+          }
+          break;
+        case 5:
+          {
+            _textLocationName.text = StringValue.favoriteLocationValue4;
+            _lat = _favoriteLocationLatLng[3].latitude;
+            _lng = _favoriteLocationLatLng[3].longitude;
+            maxLength(_textLocationName);
+          }
+          break;
+        default:
+          {
+            print("favotiteLocation = 6");
+          }
+          break;
+      }
+      goToMe();
+      notifyListeners();
+    } catch (error) {
+      print("Error favorite Location: $error");
     }
-    goToMe();
-    notifyListeners();
   }
 
   pickLocation(context, location) async {
-    LocationResult result = await showLocationPicker(
-      context,
-      _apiKey,
-      initialCenter: LatLng(location.latitude, location.longitude),
-      myLocationButtonEnabled: true,
-      layersButtonEnabled: true,
-      countries: ['TH'],
-      desiredAccuracy: LocationAccuracy.best,
-    );
+    try{
+      LocationResult result = await showLocationPicker(
+        context,
+        _apiKey,
+        initialCenter: LatLng(location.latitude, location.longitude),
+        myLocationButtonEnabled: true,
+        layersButtonEnabled: true,
+        countries: ['TH'],
+        desiredAccuracy: LocationAccuracy.best,
+      );
 
-    _pickedLocation = result;
-    _latLng = _pickedLocation.latLng;
-    _lat = _latLng.latitude;
-    _lng = _latLng.longitude;
-    goToMe();
-    int _flValue = 6;
-    favoriteLocation(_flValue, context);
-    notifyListeners();
+      _pickedLocation = result;
+      _latLng = _pickedLocation.latLng;
+      _lat = _latLng.latitude;
+      _lng = _latLng.longitude;
+      goToMe();
+      int _flValue = 6;
+      favoriteLocation(_flValue, context);
+      notifyListeners();
+    }catch(error){
+      print("Error pick location: $error");
+    }
   }
 
   localDateTime() {
-    _selectedDate = DateTime.now();
-    _dateTime = DateFormat('dd MMM yyyy').format(_selectedDate);
+    try{
+      _selectedDate = DateTime.now();
+      _dateTime = DateFormat('dd MMM yyyy').format(_selectedDate);
 
-    _selectedTime = TimeOfDay.now();
-    _hour = _selectedTime.hour.toString();
-    _minute = _selectedTime.minute.toString();
-    _time = _hour + ' : ' + _minute;
-    _timeController.text = _time;
-    _timeController.text = formatDate(
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
-            _selectedTime.hour, _selectedTime.minute),
-        [HH, ':', nn]).toString();
-    notifyListeners();
+      _selectedTime = TimeOfDay.now();
+      _hour = _selectedTime.hour.toString();
+      _minute = _selectedTime.minute.toString();
+      _time = _hour + ' : ' + _minute;
+      _timeController.text = _time;
+      _timeController.text = formatDate(
+          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
+              _selectedTime.hour, _selectedTime.minute),
+          [HH, ':', nn]).toString();
+      notifyListeners();
+    }catch(error){
+      print("Error local date time: $error");
+    }
   }
 
   timeStamp() {
-    var sec = (new DateTime.now());
-    final dateStr =
-        "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_selectedTime.hour}:${_selectedTime.minute}:${sec.second} UTC+7";
-    final formatter = DateFormat(r'''yyyy-mm-dd hh:mm:ss Z''');
+    try{
+      var sec = (new DateTime.now());
+      final dateStr =
+          "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_selectedTime.hour}:${_selectedTime.minute}:${sec.second} UTC+7";
+      final formatter = DateFormat(r'''yyyy-mm-dd hh:mm:ss Z''');
 
-    final dateTimeFromStr = formatter.parse(dateStr);
-    _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
+      final dateTimeFromStr = formatter.parse(dateStr);
+      _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
+    }catch(error){
+      print("Error timestamp: $error");
+    }
   }
 
   maxLength(_textLocationName) {
-    if (textLocationName.text.toString().length > 20) {
-      _maxLengthValue = 20;
-      _showNameLocation = textLocationName.text.replaceRange(
-          _maxLengthValue, textLocationName.text.toString().length, '...');
-    } else {
-      _maxLengthValue = textLocationName.text.toString().length;
-      _showNameLocation = textLocationName.text;
+    try{
+      if (textLocationName.text.toString().length > 20) {
+        _maxLengthValue = 20;
+        _showNameLocation = textLocationName.text.replaceRange(
+            _maxLengthValue, textLocationName.text.toString().length, '...');
+      } else {
+        _maxLengthValue = textLocationName.text.toString().length;
+        _showNameLocation = textLocationName.text;
+      }
+      notifyListeners();
+    }catch(error){
+      print("Error max length: $error");
     }
-    notifyListeners();
   }
 
   isSelectedValue(int index) {
@@ -289,124 +325,143 @@ class CameraViewModel extends BaseViewModel {
   }
 
   goToMe() async {
-    _myMarker = [];
-    _myMarker.add(Marker(
-        markerId: MarkerId('0'),
-        position: LatLng(_lat, _lng),
-        draggable: true,
-        onDragEnd: (dragEndPosition) {
-          print(dragEndPosition);
-        }));
-    GoogleMapController controller = await _controllerCompleter.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: LatLng(_lat, _lng),
-      zoom: 16,
-    )));
-    locationName();
-    notifyListeners();
+    try{
+      _myMarker = [];
+      _myMarker.add(Marker(
+          markerId: MarkerId('0'),
+          position: LatLng(_lat, _lng),
+          draggable: true,
+          onDragEnd: (dragEndPosition) {
+            print(dragEndPosition);
+          }));
+      GoogleMapController controller = await _controllerCompleter.future;
+      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(_lat, _lng),
+        zoom: 16,
+      )));
+      locationName();
+      notifyListeners();
+    }catch(error){
+      print("Error go to me: $error");
+    }
   }
 
-
   selectTime(dateTime) async {
-    print("dateTime $dateTime");
-    _selectedTime = dateTime;
+   try{
+     print("dateTime $dateTime");
+     _selectedTime = dateTime;
 
-    _hour = _selectedTime.hour.toString();
-    _minute = _selectedTime.minute.toString();
-    _time = _hour + ' : ' + _minute;
-    _timeController.text = _time;
-    _timeController.text = formatDate(
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
-            _selectedTime.hour, _selectedTime.minute),
-        [HH, ':', nn]).toString();
-    print("selectedTime :$_selectedTime $_hour $_minute");
-    var sec = (new DateTime.now());
-    final dateStr =
-        "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_hour}:${_minute}:${sec.second}";
-    final formatter = DateFormat(r'''yyyy-mm-dd hh:mm:ss''');
-    print("dateStr :$dateStr");
-    final dateTimeFromStr = formatter.parse(dateStr);
-    _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
+     _hour = _selectedTime.hour.toString();
+     _minute = _selectedTime.minute.toString();
+     _time = _hour + ' : ' + _minute;
+     _timeController.text = _time;
+     _timeController.text = formatDate(
+         DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
+             _selectedTime.hour, _selectedTime.minute),
+         [HH, ':', nn]).toString();
+     print("selectedTime :$_selectedTime $_hour $_minute");
+     var sec = (new DateTime.now());
+     final dateStr =
+         "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_hour}:${_minute}:${sec.second}";
+     final formatter = DateFormat(r'''yyyy-mm-dd hh:mm:ss''');
+     print("dateStr :$dateStr");
+     final dateTimeFromStr = formatter.parse(dateStr);
+     _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
 
-    notifyListeners();
+     notifyListeners();
+   }catch(error){
+     print("Error select time :$error");
+   }
   }
 
   submitValue() async {
-    Report report = new Report();
-    if (_textElephantAmount.text == "" ||
-        _textNote.text == "" ||
-        imagesFile == null ||
-        _textLocationName.text == "" ||
-        _lat == null ||
-        _lng == null) {
-      _valueCheck = false;
-    } else {
-      print("UserLat: $_userLat");
-      print("UserLng: $_userLng");
-      print("GlobalLat: $_lat");
-      print("GlobalLng: $_lng");
+    try{
+      Report report = new Report();
+      if (_textElephantAmount.text == "" ||
+          _textNote.text == "" ||
+          imagesFile == null ||
+          _textLocationName.text == "" ||
+          _lat == null ||
+          _lng == null) {
+        _valueCheck = false;
+      } else {
+        print("UserLat: $_userLat");
+        print("UserLng: $_userLng");
+        print("GlobalLat: $_lat");
+        print("GlobalLng: $_lng");
 
-      //Initial elephantCharacteristics
-      List<ElephantCharacteristics> elephantChaList =
-      new List<ElephantCharacteristics>();
-      for (int i = 0; i < elpCharacterList.length; i++) {
-        elephantChaList.add(ElephantCharacteristics(
-            elephantCharacterId: "E${i + 1}",
-            elephantCharacterName: elpCharacterList[i],
-            active: isSelected[i]));
+        //Initial elephantCharacteristics
+        List<ElephantCharacteristics> elephantChaList =
+        new List<ElephantCharacteristics>();
+        for (int i = 0; i < elpCharacterList.length; i++) {
+          elephantChaList.add(ElephantCharacteristics(
+              elephantCharacterId: "E${i + 1}",
+              elephantCharacterName: elpCharacterList[i],
+              active: isSelected[i]));
+        }
+        //convert to BASE64
+        final bytes = Io.File(imagesFile.path).readAsBytesSync();
+        String img64 = base64Encode(bytes);
+
+        //get UUID
+        String accountId = await getAccountId();
+        log(accountId, name: "accountId");
+
+        report
+          ..reportId = ""
+          ..accountId = accountId
+          ..missionId = ""
+          ..locationGroupId = ""
+          ..timeStamp = _timeStampValue
+          ..elephantAmount = int.parse(textElephantAmount.text)
+          ..reportDetails = textNote.text
+          ..reportStatus = 0
+          ..image = img64
+          ..locationName = textLocationName.text
+          ..pinLat = _lat
+          ..pinLng = _lng
+
+        ///TODO: create pinLatLng and userLatLng!
+          ..userLat = _userLat
+          ..userLng = _userLng
+          ..elephantCharacteristicsList = elephantChaList;
+        //send report
+        ReportApi reportApi = new ReportApi();
+        BaseModel<String> res = await reportApi.sendReport(report);
+        log('response: ' + res.data.toString());
+        //print(report.toJson());
+        _valueCheck = true;
       }
-      //convert to BASE64
-      final bytes = Io.File(imagesFile.path).readAsBytesSync();
-      String img64 = base64Encode(bytes);
-
-      //get UUID
-      String accountId = await getAccountId();
-      log(accountId, name: "accountId");
-
-      report
-        ..reportId = ""
-        ..accountId = accountId
-        ..missionId = ""
-        ..locationGroupId = ""
-        ..timeStamp = _timeStampValue
-        ..elephantAmount = int.parse(textElephantAmount.text)
-        ..reportDetails = textNote.text
-        ..reportStatus = 0
-        ..image = img64
-        ..locationName = textLocationName.text
-        ..pinLat = _lat
-        ..pinLng = _lng
-
-      ///TODO: create pinLatLng and userLatLng!
-        ..userLat = _userLat
-        ..userLng = _userLng
-        ..elephantCharacteristicsList = elephantChaList;
-      //send report
-      ReportApi reportApi = new ReportApi();
-      BaseModel<String> res = await reportApi.sendReport(report);
-      log('response: ' + res.data.toString());
-      //print(report.toJson());
-      _valueCheck = true;
+      notifyListeners();
+    }catch(error){
+      print("Error submit value: $error");
     }
-    notifyListeners();
   }
 
   clearData() {
-    _loading = true;
-    _myMarker = [];
-    _textLocationName = new TextEditingController(text: 'สถานที่เกิดเหตุ');
-    _textElephantAmount = new TextEditingController(text: "");
-    _textNote = new TextEditingController(text: "");
-    _isSelected = [false, false, false, false];
-    _imagesFile = null;
-    _selectedTime = TimeOfDay.now();
-    _favoriteLocationValue = 1;
-    _controllerCompleter = Completer();
-    notifyListeners();
+   try{
+     _loading = true;
+     _myMarker = [];
+     _textLocationName = new TextEditingController(text: 'สถานที่เกิดเหตุ');
+     _textElephantAmount = new TextEditingController(text: "");
+     _textNote = new TextEditingController(text: "");
+     _isSelected = [false, false, false, false];
+     _imagesFile = null;
+     _selectedTime = TimeOfDay.now();
+     _favoriteLocationValue = 1;
+     _controllerCompleter = Completer();
+     notifyListeners();
+   }catch(error){
+     print("Error clear data: $error");
+   }
   }
 
   getAccountId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return await prefs.get(Values.authenicized_key);
+   try{
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+     return await prefs.get(Values.authenicized_key);
+   }catch(error){
+     print("Error get Account: $error");
+   }
   }
 }
