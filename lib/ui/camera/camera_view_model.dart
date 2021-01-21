@@ -22,6 +22,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
+import 'package:day_night_time_picker/day_night_time_picker.dart';
 
 class CameraViewModel extends BaseViewModel {
   ///camera_view
@@ -48,7 +49,7 @@ class CameraViewModel extends BaseViewModel {
   String _hour, _minute, _time;
   String _dateTime;
   DateTime _selectedDate;
-  TimeOfDay _selectedTime = TimeOfDay(hour: 00, minute: 00);
+  static TimeOfDay _selectedTime = TimeOfDay(hour: 00, minute: 00);
   TextEditingController _timeController = TextEditingController();
   List<bool> _isSelected = [false, false, false, false];
   int _maxLengthValue;
@@ -69,36 +70,50 @@ class CameraViewModel extends BaseViewModel {
 
   ///Global Valuable
   bool get loading => _loading;
+
   double get lat => _lat;
+
   double get lng => _lng;
+
   File get imagesFile => _imagesFile;
+
   int get check => _check;
+
   List<Marker> get myMarker => _myMarker;
+
   TextEditingController get textNote => _textNote;
+
   TextEditingController get textElephantAmount => _textElephantAmount;
+
   TextEditingController get textLocationName => _textLocationName;
+
   TimeOfDay get selectedTime => _selectedTime;
+
   TextEditingController get timeController => _timeController;
+
   String get showNameLocation => _showNameLocation;
+
   bool get valueCheck => _valueCheck;
+
   int get favoriteLocationValue => _favoriteLocationValue;
+
   String get dateTime => _dateTime;
+
   List<bool> get isSelected => _isSelected;
+
   Completer<GoogleMapController> get controllerCompleter =>
       _controllerCompleter;
 
-  CameraViewModel() {
+  /*CameraViewModel() {
     initState();
     notifyListeners();
-  }
+  }*/
 
-
-
-  initState() async{
-    _selectedTime = null;
+  initState() async {
+    //_selectedTime = null;
     await location();
-    await localDateTime();
-    await timeStamp();
+    localDateTime();
+    //timeStamp();
     notifyListeners();
   }
 
@@ -119,17 +134,24 @@ class CameraViewModel extends BaseViewModel {
   location() async {
     var position = await GeolocatorPlatform.instance
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
     ///Global LatLng
     _lat = position.latitude;
     _lng = position.longitude;
 
     ///User LatLng
-    _userLat =position.latitude;
+    _userLat = position.latitude;
     _userLng = position.longitude;
     _latLng = LatLng(position.latitude, position.longitude);
-    _loading = false;
-    await locationName();
+    loadingValue();
+    locationName();
     goToMe();
+    print("location() working");
+    notifyListeners();
+  }
+
+  loadingValue(){
+    _loading = false;
     notifyListeners();
   }
 
@@ -137,13 +159,20 @@ class CameraViewModel extends BaseViewModel {
     _placemarks = await placemarkFromCoordinates(_lat, _lng);
     _textLocationName.text = _placemarks[0].street.toString();
     maxLength(_textLocationName);
+    await textLocationNameValue(_placemarks[0].street.toString());
+    print("locationName :"+_placemarks[0].street.toString());
     notifyListeners();
   }
 
-  favoriteLocation(value,context) {
+  textLocationNameValue(String placemarks) {
+    textLocationName.text = placemarks;
+    notifyListeners();
+  }
+
+  favoriteLocation(value, context) {
     _favoriteLocationValue = value;
     switch (_favoriteLocationValue) {
-      case 1 :
+      case 1:
         {
           location();
           maxLength(_textLocationName);
@@ -191,13 +220,11 @@ class CameraViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  pickLocation(context,location) async{
+  pickLocation(context, location) async {
     LocationResult result = await showLocationPicker(
       context,
       _apiKey,
-      initialCenter:
-      LatLng(location.latitude, location.longitude),
-      automaticallyAnimateToCurrentLocation: true,
+      initialCenter: LatLng(location.latitude, location.longitude),
       myLocationButtonEnabled: true,
       layersButtonEnabled: true,
       countries: ['TH'],
@@ -210,7 +237,7 @@ class CameraViewModel extends BaseViewModel {
     _lng = _latLng.longitude;
     goToMe();
     int _flValue = 6;
-    favoriteLocation(_flValue,context);
+    favoriteLocation(_flValue, context);
     notifyListeners();
   }
 
@@ -226,7 +253,7 @@ class CameraViewModel extends BaseViewModel {
     _timeController.text = formatDate(
         DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
             _selectedTime.hour, _selectedTime.minute),
-        [hh, ':', nn, " ", am]).toString();
+        [HH, ':', nn]).toString();
     notifyListeners();
   }
 
@@ -279,43 +306,54 @@ class CameraViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  selectTime(BuildContext context) async {
-    final TimeOfDay picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-    );
-    if (picked != null) {
-      _selectedTime = picked;
-      _hour = _selectedTime.hour.toString();
-      _minute = _selectedTime.minute.toString();
-      _time = _hour + ' : ' + _minute;
-      _timeController.text = _time;
-      _timeController.text = formatDate(
-          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
-              _selectedTime.hour, _selectedTime.minute),
-          [hh, ':', nn, " ", am]).toString();
-    }
-    timeStamp();
+
+  selectTime(dateTime) async {
+    print("dateTime $dateTime");
+    _selectedTime = dateTime;
+
+    _hour = _selectedTime.hour.toString();
+    _minute = _selectedTime.minute.toString();
+    _time = _hour + ' : ' + _minute;
+    _timeController.text = _time;
+    _timeController.text = formatDate(
+        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
+            _selectedTime.hour, _selectedTime.minute),
+        [HH, ':', nn]).toString();
+    print("selectedTime :$_selectedTime $_hour $_minute");
+    var sec = (new DateTime.now());
+    final dateStr =
+        "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_hour}:${_minute}:${sec.second}";
+    final formatter = DateFormat(r'''yyyy-mm-dd hh:mm:ss''');
+    print("dateStr :$dateStr");
+    final dateTimeFromStr = formatter.parse(dateStr);
+    _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
+
     notifyListeners();
   }
 
   submitValue() async {
-    print("Userlat: $_userLat");
-    print("Userlng: $_userLng");
     Report report = new Report();
     if (_textElephantAmount.text == "" ||
         _textNote.text == "" ||
         imagesFile == null ||
         _textLocationName.text == "" ||
         _lat == null ||
-        _lng == null ) {
+        _lng == null) {
       _valueCheck = false;
     } else {
+      print("UserLat: $_userLat");
+      print("UserLng: $_userLng");
+      print("GlobalLat: $_lat");
+      print("GlobalLng: $_lng");
+
       //Initial elephantCharacteristics
-      List<ElephantCharacteristics> elephantChaList = new List<ElephantCharacteristics>();
+      List<ElephantCharacteristics> elephantChaList =
+      new List<ElephantCharacteristics>();
       for (int i = 0; i < elpCharacterList.length; i++) {
         elephantChaList.add(ElephantCharacteristics(
-            elephantCharacterId: "E${i+1}", elephantCharacterName: elpCharacterList[i], active: isSelected[i]));
+            elephantCharacterId: "E${i + 1}",
+            elephantCharacterName: elpCharacterList[i],
+            active: isSelected[i]));
       }
       //convert to BASE64
       final bytes = Io.File(imagesFile.path).readAsBytesSync();
@@ -323,7 +361,7 @@ class CameraViewModel extends BaseViewModel {
 
       //get UUID
       String accountId = await getAccountId();
-      log(accountId, name:"accountId");
+      log(accountId, name: "accountId");
 
       report
         ..reportId = ""
@@ -338,6 +376,7 @@ class CameraViewModel extends BaseViewModel {
         ..locationName = textLocationName.text
         ..pinLat = _lat
         ..pinLng = _lng
+
       ///TODO: create pinLatLng and userLatLng!
         ..userLat = _userLat
         ..userLng = _userLng
@@ -353,6 +392,7 @@ class CameraViewModel extends BaseViewModel {
   }
 
   clearData() {
+    _loading = true;
     _myMarker = [];
     _textLocationName = new TextEditingController(text: 'สถานที่เกิดเหตุ');
     _textElephantAmount = new TextEditingController(text: "");
@@ -362,20 +402,11 @@ class CameraViewModel extends BaseViewModel {
     _selectedTime = TimeOfDay.now();
     _favoriteLocationValue = 1;
     _controllerCompleter = Completer();
-    _hour = _selectedTime.hour.toString();
-    _minute = _selectedTime.minute.toString();
-    _time = _hour + ' : ' + _minute;
-    _timeController.text = _time;
-    _timeController.text = formatDate(
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
-            _selectedTime.hour, _selectedTime.minute),
-        [hh, ':', nn, " ", am]).toString();
     notifyListeners();
   }
 
   getAccountId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.get(Values.authenicized_key);
-
   }
 }
