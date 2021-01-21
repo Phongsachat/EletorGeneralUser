@@ -16,6 +16,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
@@ -38,6 +39,7 @@ class HomeView extends StatelessWidget {
       return ViewModelBuilder<ConnectionViewModel>.reactive(
           viewModelBuilder: () => ConnectionViewModel(),
           builder: (context, vm2, child) {
+            print("home view isConnected : ${vm2.isConnected}");
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
@@ -77,19 +79,19 @@ class HomeView extends StatelessWidget {
                                                 maxLines: 1,
                                                 style: TextStyle(
                                                     fontFamily:
-                                                        primaryFontFamily,
+                                                    primaryFontFamily,
                                                     fontSize: 20,
                                                     fontWeight:
-                                                        FontWeight.bold),
+                                                    FontWeight.bold),
                                                 textAlign: TextAlign.center,
                                               ),
                                               AutoSizeText(
-                                                "บุคคลทั่วไป",
+                                                StringValue.generalUser,
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 1,
                                                 style: TextStyle(
                                                     fontFamily:
-                                                        primaryFontFamily,
+                                                    primaryFontFamily,
                                                     fontSize: 15,
                                                     color: Colors.grey),
                                                 textAlign: TextAlign.center,
@@ -110,7 +112,7 @@ class HomeView extends StatelessWidget {
                                           elevation: 8,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(30),
+                                            BorderRadius.circular(30),
                                           ),
                                           color: Colors.white,
                                           child: Column(
@@ -122,7 +124,7 @@ class HomeView extends StatelessWidget {
                                                       child: Container(
                                                         color: secondColor,
                                                         padding:
-                                                            EdgeInsets.all(5),
+                                                        EdgeInsets.all(5),
                                                         child: Icon(
                                                           Icons
                                                               .track_changes_outlined,
@@ -136,7 +138,7 @@ class HomeView extends StatelessWidget {
                                                     flex: 2,
                                                     child: Align(
                                                       alignment:
-                                                          Alignment.center,
+                                                      Alignment.center,
                                                       child: AutoSizeText(
                                                         StringValue
                                                             .current_mission,
@@ -145,11 +147,11 @@ class HomeView extends StatelessWidget {
                                                             .ellipsis,
                                                         style: TextStyle(
                                                             fontFamily:
-                                                                primaryFontFamily,
+                                                            primaryFontFamily,
                                                             fontSize: 18,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                            FontWeight
+                                                                .bold),
                                                       ),
                                                     ),
                                                   ),
@@ -167,137 +169,146 @@ class HomeView extends StatelessWidget {
                                             stream: _fireStoreUtils.snapshots(),
                                             builder: (BuildContext context,
                                                 AsyncSnapshot<QuerySnapshot>
-                                                    snapshot) {
+                                                snapshot) {
                                               return ListView.builder(
                                                   scrollDirection: Axis
                                                       .vertical,
                                                   itemCount:
-                                                      (snapshot.data != null)
-                                                          ? snapshot
-                                                              .data.docs.length
-                                                          : 0,
+                                                  (snapshot.data != null)
+                                                      ? snapshot
+                                                      .data.docs.length
+                                                      : 0,
                                                   itemBuilder:
                                                       (context, index) {
                                                     var chunkMission = snapshot
                                                         .data.docs[index]
                                                         .data();
                                                     String locationName =
-                                                        chunkMission[
-                                                            'locationName'];
+                                                    chunkMission[
+                                                    'locationName'];
                                                     Timestamp situationTime =
-                                                        chunkMission[
-                                                            'startTimeStamp'];
+                                                    chunkMission[
+                                                    'startTimeStamp'];
                                                     String details =
-                                                        chunkMission['details'];
+                                                    chunkMission['details'];
                                                     GeoPoint latLng =
-                                                        chunkMission['latLng'];
+                                                    chunkMission['latLng'];
                                                     String photoURL =
-                                                        chunkMission['imgSrc'];
+                                                    chunkMission['imgSrc'];
                                                     String missionID =
-                                                        chunkMission[
-                                                            'missionId'];
+                                                    chunkMission[
+                                                    'missionId'];
                                                     int severityId =
-                                                        chunkMission[
-                                                            'severity'];
+                                                    chunkMission[
+                                                    'severity'];
                                                     int missionStatus =
-                                                        chunkMission[
-                                                            'missionStatus'];
+                                                    chunkMission[
+                                                    'missionStatus'];
                                                     Timestamp finishTimeStamp =
-                                                        chunkMission[
-                                                            'finishTimeStamp'];
+                                                    chunkMission[
+                                                    'finishTimeStamp'];
                                                     String missionReportId =
-                                                        chunkMission[
-                                                            'missionReportId'];
+                                                    chunkMission[
+                                                    'missionReportId'];
                                                     bool missionReportStatus =
-                                                        chunkMission[
-                                                            'missionReportStatus'];
+                                                    chunkMission[
+                                                    'missionReportStatus'];
                                                     // print(
                                                     //     "chunkMission test : $chunkMission");
 
                                                     // vm1.getCurrentWorking(missionID);
 
                                                     return (missionStatus == 1)
-                                                          ? Container()
-                                                          :AnimationConfiguration
-                                                            .staggeredList(
-                                                                position: index,
-                                                                duration:
-                                                                    const Duration(
-                                                                        milliseconds:
-                                                                            200),
+                                                        ? Container()
+                                                        : AnimationConfiguration
+                                                        .staggeredList(
+                                                        position: index,
+                                                        duration:
+                                                        const Duration(
+                                                            milliseconds:
+                                                            200),
+                                                        child:
+                                                        SlideAnimation(
+                                                          verticalOffset:
+                                                          50.0,
+                                                          child:
+                                                          FadeInAnimation(
+                                                              child:
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .only(
+                                                                    bottom:
+                                                                    8.0),
                                                                 child:
-                                                                    SlideAnimation(
-                                                                  verticalOffset:
-                                                                      50.0,
+                                                                InkWell(
                                                                   child:
-                                                                      FadeInAnimation(
-                                                                          child:
-                                                                              Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        bottom:
-                                                                            8.0),
-                                                                    child:
-                                                                        InkWell(
-                                                                      child:
-                                                                          MissionList(
-                                                                        content:
-                                                                            situationTime.toDateTime(),
-                                                                        title:
-                                                                            locationName,
-                                                                        icon: Icons
-                                                                            .description,
-                                                                      ),
-                                                                      onTap:
-                                                                          () async {
-                                                                        vm1.changeHomeState(
-                                                                            false);
+                                                                  MissionList(
+                                                                    content:
+                                                                    situationTime.toDateTime(),
+                                                                    title:
+                                                                    locationName,
+                                                                    icon: Icons
+                                                                        .description,
+                                                                  ),
+                                                                  onTap:
+                                                                      () async {
+
+                                                                    if(vm2.isConnected){
+                                                                      vm1.changeHomeState(
+                                                                          false);
+
+                                                                      // EasyLoading
+                                                                      //     .show();
+                                                                      context
+                                                                          .read<LoadingViewModel>()
+                                                                          .showLoading();
+
+                                                                      context
+                                                                          .read<MissionCardsViewModel>()
+                                                                          .initialize = missionID;
+
+                                                                      MissionModel missionModel = MissionModel(
+                                                                          locationName,
+                                                                          situationTime.toDateTime(),
+                                                                          details,
+                                                                          photoURL,
+                                                                          severityId,
+                                                                          latLng,
+                                                                          missionID,
+                                                                          missionStatus,
+                                                                          finishTimeStamp.toDateTime(),
+                                                                          missionReportId,
+                                                                          missionReportStatus);
+
+                                                                      await vm1
+                                                                          .checkingWasJoinMission(missionID);
 
                                                                         // EasyLoading
-                                                                        //     .show();
+                                                                        //     .dismiss();
                                                                         context
                                                                             .read<LoadingViewModel>()
-                                                                            .showLoading();
+                                                                            .dismissLoading();
 
-                                                                        context
-                                                                            .read<MissionCardsViewModel>()
-                                                                            .initialize = missionID;
+                                                                        Get.to(
+                                                                            MissionCardsView(
+                                                                              missionModel: missionModel,
+                                                                            ),
+                                                                            transition: Transition.downToUp);
 
-                                                                        MissionModel missionModel = MissionModel(
-                                                                            locationName,
-                                                                            situationTime.toDateTime(),
-                                                                            details,
-                                                                            photoURL,
-                                                                            severityId,
-                                                                            latLng,
-                                                                            missionID,
-                                                                            missionStatus,
-                                                                            finishTimeStamp.toDateTime(),
-                                                                            missionReportId,
-                                                                            missionReportStatus);
+                                                                    }else{
+                                                                      reportDisconnected(context);
+                                                                    }
 
-                                                                          // EasyLoading
-                                                                          //     .dismiss();
-                                                                          context
-                                                                              .read<LoadingViewModel>()
-                                                                              .dismissLoading();
-
-                                                                          Get.to(
-                                                                              MissionCardsView(
-                                                                                missionModel: missionModel,
-                                                                              ),
-                                                                              transition: Transition.downToUp);
-
-                                                                      },
-                                                                    ),
-                                                                  )),
-                                                                ));
+                                                                  },
+                                                                ),
+                                                              )),
+                                                        ));
                                                   });
                                             },
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                                 Container(
@@ -310,65 +321,65 @@ class HomeView extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(50),
                                         child: (imageUrl != null)
                                             ? CachedNetworkImage(
-                                                imageUrl: imageUrl,
-                                                imageBuilder:
-                                                    (context, imageProvider) =>
-                                                        Container(
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                        image: imageProvider,
-                                                        fit: BoxFit.cover,
-                                                        colorFilter:
-                                                            ColorFilter.mode(
-                                                                Colors
-                                                                    .grey[200],
-                                                                BlendMode
-                                                                    .colorBurn)),
-                                                  ),
+                                          imageUrl: imageUrl,
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                      colorFilter:
+                                                      ColorFilter.mode(
+                                                          Colors
+                                                              .grey[200],
+                                                          BlendMode
+                                                              .colorBurn)),
                                                 ),
-                                                placeholder: (context, url) =>
-                                                    Shimmer.fromColors(
-                                                        child: Container(
-                                                          height: 100,
-                                                          width: 100,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        50),
-                                                            child: Container(
-                                                              width: 100,
-                                                              height: 100,
-                                                              color: Colors
-                                                                  .grey[200],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        baseColor: Colors.white,
-                                                        highlightColor:
-                                                            Colors.grey[300]),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                              )
-                                            : Shimmer.fromColors(
-                                                child: Container(
-                                                  height: 100,
-                                                  width: 100,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                    child: Container(
-                                                      width: 100,
-                                                      height: 100,
-                                                      color: Colors.grey[200],
+                                              ),
+                                          placeholder: (context, url) =>
+                                              Shimmer.fromColors(
+                                                  child: Container(
+                                                    height: 100,
+                                                    width: 100,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(
+                                                          50),
+                                                      child: Container(
+                                                        width: 100,
+                                                        height: 100,
+                                                        color: Colors
+                                                            .grey[200],
+                                                      ),
                                                     ),
                                                   ),
+                                                  baseColor: Colors.white,
+                                                  highlightColor:
+                                                  Colors.grey[300]),
+                                          errorWidget:
+                                              (context, url, error) =>
+                                              Icon(Icons.error),
+                                        )
+                                            : Shimmer.fromColors(
+                                            child: Container(
+                                              height: 100,
+                                              width: 100,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    50),
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  color: Colors.grey[200],
                                                 ),
-                                                baseColor: Colors.white,
-                                                highlightColor:
-                                                    Colors.grey[300]),
+                                              ),
+                                            ),
+                                            baseColor: Colors.white,
+                                            highlightColor:
+                                            Colors.grey[300]),
                                       ),
                                     )),
                               ],
@@ -384,4 +395,41 @@ class HomeView extends StatelessWidget {
           });
     });
   }
+
+  reportDisconnected(BuildContext context) {
+    NDialog(
+      dialogStyle: DialogStyle(titleDivider: true),
+      title: Text(StringValue.reportDisconnectedTitle,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: primaryFontFamily,
+              fontSize: 18,
+              color: Colors.red,
+              fontWeight: FontWeight.bold)),
+      content: Text(StringValue.reportDisconnectedDetails,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: primaryFontFamily,
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.normal)),
+      actions: [
+        FlatButton(
+            child: Text(StringValue.accept,
+                style: TextStyle(
+                    fontFamily: primaryFontFamily,
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                  color: Colors.grey[200], width: 1, style: BorderStyle.solid),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ],
+    ).show(context);
+  }
 }
+

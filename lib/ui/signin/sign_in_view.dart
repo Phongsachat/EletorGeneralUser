@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:ndialog/ndialog.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
@@ -82,7 +83,7 @@ class SignInView extends StatelessWidget {
                                               child: Column(
                                                 children: [
                                                   SizedBox(width: 30, height: 50),
-                                                  googleSignInButton(vm2,states)
+                                                  googleSignInButton(vm2,states,vm1,context)
                                                 ],
                                               ))
                                         ],
@@ -110,7 +111,7 @@ class SignInView extends StatelessWidget {
   }
 
 
-  RoundedIconButton googleSignInButton(SignInViewModel vm2,states) {
+  RoundedIconButton googleSignInButton(SignInViewModel vm2, states, vm1,context) {
     return RoundedIconButton(
       text: StringValue.googleSignIn,
       icons: Image.asset(
@@ -121,12 +122,16 @@ class SignInView extends StatelessWidget {
       padding: EdgeInsets.all(5),
       height: 50,
       onTap: () async {
-        //EasyLoading.show();
-        states.showLoading();
 
-        await vm2.signIn();
+        if(vm1.isConnected == false){
+          reportDisconnected(context);
+        }
+        else if (await vm2.registerUser(vm2.user.providerData.first)) {
 
-        if (await vm2.registerUser(vm2.user.providerData.first)) {
+          //EasyLoading.show();
+          states.showLoading();
+
+          await vm2.signIn();
           //EasyLoading.dismiss();
           states.dismissLoading();
 
@@ -161,5 +166,43 @@ class SignInView extends StatelessWidget {
       width: 120,
       height: 120,
     );
+  }
+
+  reportDisconnected(BuildContext context) {
+    NDialog(
+      dialogStyle: DialogStyle(titleDivider: true),
+      title: Text(StringValue.reportDisconnectedTitle,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: primaryFontFamily,
+              fontSize: 18,
+              color: Colors.red,
+              fontWeight: FontWeight.bold)),
+      content: Text(StringValue.reportDisconnectedDetails,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: primaryFontFamily,
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.normal)),
+      actions: [
+        FlatButton(
+            child: Text(StringValue.accept,
+                style: TextStyle(
+                    fontFamily: primaryFontFamily,
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                  color: Colors.grey[200], width: 1, style: BorderStyle.solid),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Provider.of<LoadingViewModel>(context, listen: false)
+                  .dismissLoading();
+            }),
+      ],
+    ).show(context);
   }
 }

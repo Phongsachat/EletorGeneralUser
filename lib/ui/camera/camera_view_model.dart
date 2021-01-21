@@ -22,6 +22,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
+import 'package:day_night_time_picker/day_night_time_picker.dart';
 
 class CameraViewModel extends BaseViewModel {
   ///camera_view
@@ -48,7 +49,7 @@ class CameraViewModel extends BaseViewModel {
   String _hour, _minute, _time;
   String _dateTime;
   DateTime _selectedDate;
-  TimeOfDay _selectedTime = TimeOfDay(hour: 00, minute: 00);
+  static TimeOfDay _selectedTime = TimeOfDay(hour: 00, minute: 00);
   TextEditingController _timeController = TextEditingController();
   List<bool> _isSelected = [false, false, false, false];
   int _maxLengthValue;
@@ -109,10 +110,10 @@ class CameraViewModel extends BaseViewModel {
   }*/
 
   initState() async {
-    _selectedTime = null;
+    //_selectedTime = null;
     await location();
     localDateTime();
-    timeStamp();
+    //timeStamp();
     notifyListeners();
   }
 
@@ -252,7 +253,7 @@ class CameraViewModel extends BaseViewModel {
     _timeController.text = formatDate(
         DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
             _selectedTime.hour, _selectedTime.minute),
-        [hh, ':', nn, " ", am]).toString();
+        [HH, ':', nn]).toString();
     notifyListeners();
   }
 
@@ -305,23 +306,28 @@ class CameraViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  selectTime(BuildContext context) async {
-    final TimeOfDay picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-    );
-    if (picked != null) {
-      _selectedTime = picked;
-      _hour = _selectedTime.hour.toString();
-      _minute = _selectedTime.minute.toString();
-      _time = _hour + ' : ' + _minute;
-      _timeController.text = _time;
-      _timeController.text = formatDate(
-          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
-              _selectedTime.hour, _selectedTime.minute),
-          [hh, ':', nn, " ", am]).toString();
-    }
-    timeStamp();
+
+  selectTime(dateTime) async {
+    print("dateTime $dateTime");
+    _selectedTime = dateTime;
+
+    _hour = _selectedTime.hour.toString();
+    _minute = _selectedTime.minute.toString();
+    _time = _hour + ' : ' + _minute;
+    _timeController.text = _time;
+    _timeController.text = formatDate(
+        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
+            _selectedTime.hour, _selectedTime.minute),
+        [HH, ':', nn]).toString();
+    print("selectedTime :$_selectedTime $_hour $_minute");
+    var sec = (new DateTime.now());
+    final dateStr =
+        "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_hour}:${_minute}:${sec.second}";
+    final formatter = DateFormat(r'''yyyy-mm-dd hh:mm:ss''');
+    print("dateStr :$dateStr");
+    final dateTimeFromStr = formatter.parse(dateStr);
+    _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
+
     notifyListeners();
   }
 
@@ -396,14 +402,6 @@ class CameraViewModel extends BaseViewModel {
     _selectedTime = TimeOfDay.now();
     _favoriteLocationValue = 1;
     _controllerCompleter = Completer();
-    _hour = _selectedTime.hour.toString();
-    _minute = _selectedTime.minute.toString();
-    _time = _hour + ' : ' + _minute;
-    _timeController.text = _time;
-    _timeController.text = formatDate(
-        DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
-            _selectedTime.hour, _selectedTime.minute),
-        [hh, ':', nn, " ", am]).toString();
     notifyListeners();
   }
 

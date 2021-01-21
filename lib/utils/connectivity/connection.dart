@@ -7,7 +7,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 
 class ConnectionViewModel extends BaseViewModel {
-  bool _isConnected = true;
+  static bool _isConnected = true;
   Connectivity _connectivity;
   Key _notificationKey = UniqueKey();
 

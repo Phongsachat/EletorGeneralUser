@@ -106,7 +106,12 @@ class StringValue {
   static const reportMissionFailDetails =
       "ขออภัย รายงานภารกิจล้มเหลว กรุณารายงานใหม่อีกครั้ง";
 
-  //Join Mission
+  ///Join Mission
   static const joinMissionContent = "\nยกเลิกภารกิจสำเร็จ\n";
   static const joinMissionTitle = "แจ้งเตือน";
+
+  ///Connection
+  static const reportDisconnectedTitle = "สัญญาณอินเทอร์เน็ตขัดข้อง";
+  static const reportDisconnectedDetails = "กรุณาตรวจสอบสัญญาณอินเทอร์เน็ต";
+  static const generalUser = "บุคคลทั่วไป";
 }
