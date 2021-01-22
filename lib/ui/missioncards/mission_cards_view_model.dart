@@ -144,32 +144,4 @@ class MissionCardsViewModel extends ChangeNotifier {
       print("Error get attendants: $error");
     }
   }
-
-  joinMission(String missionId) async {
-   try{
-     Query query = FirebaseFirestore.instance.collection("/mission").where(
-         "missionId", isEqualTo: missionID);
-
-     String uid = SharedPreferenceUtils.getString(Values.authenicized_key);
-     CollectionReference collRef = FirebaseFirestore.instance.collection(
-         "/mission");
-     DocumentReference uidRef = FirebaseFirestore.instance.doc("/users/$uid");
-
-     await query.get().then((value) async {
-       await collRef.doc(missionId).collection("attendants").doc(uid).set({
-         "isAccept": true,
-         "isSuccess": false,
-         "uid": uidRef
-       }).then((value) {
-         _isJoinMissionLoading = false;
-       });
-     }).catchError((error) {
-       print("error:: $error");
-     });
-
-     notifyListeners();
-   }catch(error){
-     print("Error join mission: $error");
-   }
-  }
 }

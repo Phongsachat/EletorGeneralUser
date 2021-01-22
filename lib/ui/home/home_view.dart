@@ -255,6 +255,7 @@ class HomeView extends StatelessWidget {
 
                                                                     // isConnected!!!
                                                                     if(true){
+                                                                      print("homeView Select mission");
                                                                       vm1.changeHomeState(
                                                                           false);
 
@@ -281,8 +282,8 @@ class HomeView extends StatelessWidget {
                                                                           missionReportId,
                                                                           missionReportStatus);
 
-                                                                      await vm1
-                                                                          .checkingWasJoinMission(missionID);
+                                                                      /*await vm1
+                                                                          .checkingWasJoinMission(missionID);*/
 
                                                                         // EasyLoading
                                                                         //     .dismiss();

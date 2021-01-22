@@ -9,7 +9,7 @@ part of 'report_services.dart';
 class _ReportServices implements ReportServices {
   _ReportServices(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'https://it1.sut.ac.th:9026/eletor/api/';
+    baseUrl ??= 'http://it1.sut.ac.th:9026/eletor/api/';
   }
 
   final Dio _dio;
