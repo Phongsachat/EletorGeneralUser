@@ -18,15 +18,18 @@ class HeaderAppViewModel extends BaseViewModel{
   get isLogOutSuccess => _isLogOutSuccess;
 
   signOut(HomeViewModel vm) async {
+    try{
+      print("${vm.name} ${vm.position} ${vm.imageUrl} ");
+      SharedPreferences pref = await SharedPreferenceUtils.initialize();
 
-    print("${vm.name} ${vm.position} ${vm.imageUrl} ");
-    SharedPreferences pref = await SharedPreferenceUtils.initialize();
-
-    SharedPreferenceUtils.clearAll();
-    if(!(pref.containsKey(Values.authenicized_key))){
-      _isLogOutSuccess = true;
-      _isNotificationShow = true;
-      notifyListeners();
+      SharedPreferenceUtils.clearAll();
+      if(!(pref.containsKey(Values.authenicized_key))){
+        _isLogOutSuccess = true;
+        _isNotificationShow = true;
+        notifyListeners();
+      }
+    }catch(error){
+      print("Error sign out: $error");
     }
   }
 

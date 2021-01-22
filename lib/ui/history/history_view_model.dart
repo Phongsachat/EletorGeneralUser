@@ -16,33 +16,45 @@ class HistoryViewModel extends ChangeNotifier{
   DateTime get date => _date;
 
   maxLength(locationName) {
-    int _maxLengthValue;
-    if (locationName.length > 17) {
-      _maxLengthValue = 17;
-      _maxLengthLocationName = locationName.replaceRange(
-          _maxLengthValue, locationName.toString().length, '...');
-    } else {
-      _maxLengthValue = locationName.toString().length;
-      _maxLengthLocationName = locationName;
+    try{
+      int _maxLengthValue;
+      if (locationName.length > 17) {
+        _maxLengthValue = 17;
+        _maxLengthLocationName = locationName.replaceRange(
+            _maxLengthValue, locationName.toString().length, '...');
+      } else {
+        _maxLengthValue = locationName.toString().length;
+        _maxLengthLocationName = locationName;
+      }
+      notifyListeners();
+    }catch(error){
+      print("Error max length: $error");
     }
-    notifyListeners();
   }
 
   convertTimeStamp(timeStamp){
-    _date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
-    _stringTimeStamp = DateFormat('dd MMMM yyyy HH:mm').format(_date);
+    try{
+      _date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
+      _stringTimeStamp = DateFormat('dd MMMM yyyy HH:mm').format(_date);
+    }catch(error){
+      print("Error convert time stamp: $error");
+    }
 
   }
 
   maxItemCount(lengthValue){
-    if(lengthValue!=null){
-      _length = lengthValue;
-    }else if(lengthValue>10){
-      _length = 10;
-    }else{
-      _length = 0;
+    try{
+      if(lengthValue!=null){
+        _length = lengthValue;
+      }else if(lengthValue>10){
+        _length = 10;
+      }else{
+        _length = 0;
+      }
+      notifyListeners();
+    }catch(error){
+      print("Error max item count: $lengthValue");
     }
-    notifyListeners();
   }
 
 }

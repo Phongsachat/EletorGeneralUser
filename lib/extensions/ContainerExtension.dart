@@ -18,9 +18,13 @@ extension ContainerExtension on BoxDecoration {
 }
 
 extension DateTimeExtension on Timestamp{
-  String toDateTime(){
-    var format = DateFormat("d MMMM y, HH:mm");
-    var currentMicroSecond = DateTime.now().microsecondsSinceEpoch;
-    return format.format(DateTime.fromMicrosecondsSinceEpoch(this.microsecondsSinceEpoch ?? currentMicroSecond));
+  String toDateTime() {
+    if (this != null) {
+      var format = DateFormat("d MMMM y, HH:mm");
+      var currentMicroSecond = DateTime.now().microsecondsSinceEpoch;
+      return format.format(DateTime.fromMicrosecondsSinceEpoch(
+          this.microsecondsSinceEpoch ?? currentMicroSecond));
+    }
+    return "";
   }
 }
