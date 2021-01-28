@@ -20,8 +20,12 @@ class Character {
 
   static const _kFontFam = 'Character';
 
-  static const IconData car = IconData(0xe800, fontFamily: _kFontFam);
-  static const IconData elephant = IconData(0xe801, fontFamily: _kFontFam);
-  static const IconData road = IconData(0xe802, fontFamily: _kFontFam);
-  static const IconData eating = IconData(0xe803, fontFamily: _kFontFam);
+  static const IconData bxs_car_crash = IconData(0xe800, fontFamily: _kFontFam);
+  static const IconData bx_restaurant = IconData(0xe801, fontFamily: _kFontFam);
+  static const IconData bx_angry = IconData(0xe802, fontFamily: _kFontFam);
+  static const IconData road_variant = IconData(0xe803, fontFamily: _kFontFam);
+  static const IconData road = IconData(0xe804, fontFamily: _kFontFam);
+  static const IconData eating = IconData(0xe805, fontFamily: _kFontFam);
+  static const IconData elephant = IconData(0xe806, fontFamily: _kFontFam);
+  static const IconData car = IconData(0xe807, fontFamily: _kFontFam);
 }

@@ -22,7 +22,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
-import 'package:day_night_time_picker/day_night_time_picker.dart';
 
 class CameraViewModel extends BaseViewModel {
   ///camera_view
@@ -50,6 +49,7 @@ class CameraViewModel extends BaseViewModel {
   String _dateTime;
   DateTime _selectedDate;
   static TimeOfDay _selectedTime = TimeOfDay(hour: 00, minute: 00);
+  TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
   List<bool> _isSelected = [false, false, false, false];
   int _maxLengthValue;
@@ -89,7 +89,11 @@ class CameraViewModel extends BaseViewModel {
 
   TimeOfDay get selectedTime => _selectedTime;
 
+  DateTime get selectedDate => _selectedDate;
+
   TextEditingController get timeController => _timeController;
+
+  TextEditingController get dateController => _dateController;
 
   String get showNameLocation => _showNameLocation;
 
@@ -118,29 +122,29 @@ class CameraViewModel extends BaseViewModel {
   }
 
   openGallery(BuildContext context) async {
-    try {
+    try{
       var pickedFile = await _picker.getImage(source: ImageSource.gallery);
       _imagesFile = File(pickedFile.path);
       Navigator.of(context).pop();
       notifyListeners();
-    } catch (error) {
-      print("Error openGallery: $error");
+    }catch(error){
+      print("Error open gallery: $error");
     }
   }
 
   openCamera(BuildContext context) async {
-    try {
+    try{
       var pickedFile = await _picker.getImage(source: ImageSource.camera);
       _imagesFile = File(pickedFile.path);
       Navigator.of(context).pop();
       notifyListeners();
-    } catch (error) {
-      print("Error openCamera: $error");
+    }catch(error){
+      print("Error open camera: $error");
     }
   }
 
   location() async {
-    try {
+    try{
       var position = await GeolocatorPlatform.instance
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
@@ -153,29 +157,29 @@ class CameraViewModel extends BaseViewModel {
       _userLng = position.longitude;
       _latLng = LatLng(position.latitude, position.longitude);
       loadingValue();
-      locationName();
+      await locationName();
       goToMe();
       print("location() working");
       notifyListeners();
-    } catch (error) {
+    }catch(error){
       print("Error location $error");
     }
   }
 
-  loadingValue() {
+  loadingValue(){
     _loading = false;
     notifyListeners();
   }
 
   locationName() async {
-    try {
+    try{
       _placemarks = await placemarkFromCoordinates(_lat, _lng);
       _textLocationName.text = _placemarks[0].street.toString();
       maxLength(_textLocationName);
       await textLocationNameValue(_placemarks[0].street.toString());
-      print("locationName :" + _placemarks[0].street.toString());
+      print("locationName :"+_placemarks[0].street.toString());
       notifyListeners();
-    } catch (error) {
+    }catch(error){
       print("Error location name: $error");
     }
   }
@@ -186,7 +190,7 @@ class CameraViewModel extends BaseViewModel {
   }
 
   favoriteLocation(value, context) {
-    try {
+    try{
       _favoriteLocationValue = value;
       switch (_favoriteLocationValue) {
         case 1:
@@ -235,7 +239,7 @@ class CameraViewModel extends BaseViewModel {
       }
       goToMe();
       notifyListeners();
-    } catch (error) {
+    }catch(error){
       print("Error favorite Location: $error");
     }
   }
@@ -279,6 +283,9 @@ class CameraViewModel extends BaseViewModel {
           DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
               _selectedTime.hour, _selectedTime.minute),
           [HH, ':', nn]).toString();
+
+      _dateController.text = _dateTime;
+
       notifyListeners();
     }catch(error){
       print("Error local date time: $error");
@@ -295,7 +302,7 @@ class CameraViewModel extends BaseViewModel {
       final dateTimeFromStr = formatter.parse(dateStr);
       _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
     }catch(error){
-      print("Error timestamp: $error");
+      print("Error timestamp $error");
     }
   }
 
@@ -316,12 +323,16 @@ class CameraViewModel extends BaseViewModel {
   }
 
   isSelectedValue(int index) {
-    for (int buttonIndex = 0; buttonIndex < _isSelected.length; buttonIndex++) {
-      if (buttonIndex == index) {
-        _isSelected[buttonIndex] = !_isSelected[buttonIndex];
+    try{
+      for (int buttonIndex = 0; buttonIndex < _isSelected.length; buttonIndex++) {
+        if (buttonIndex == index) {
+          _isSelected[buttonIndex] = !_isSelected[buttonIndex];
+        }
       }
+      notifyListeners();
+    }catch(error){
+      print("Error is selected value $error");
     }
-    notifyListeners();
   }
 
   goToMe() async {
@@ -346,32 +357,48 @@ class CameraViewModel extends BaseViewModel {
     }
   }
 
+  selectDate(context) async {
+    DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate,
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(2021),
+        lastDate: DateTime(2121));
+    if (picked != null){_selectedDate = picked;
+    _dateController.text = DateFormat("dd MMM yyyy").format(_selectedDate);}
+    print("date : "+_dateController.text);
+    timeStamp();
+    notifyListeners();
+  }
+
+
+
   selectTime(dateTime) async {
-   try{
-     print("dateTime $dateTime");
-     _selectedTime = dateTime;
+    try{
+      print("dateTime $dateTime");
+      _selectedTime = dateTime;
 
-     _hour = _selectedTime.hour.toString();
-     _minute = _selectedTime.minute.toString();
-     _time = _hour + ' : ' + _minute;
-     _timeController.text = _time;
-     _timeController.text = formatDate(
-         DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
-             _selectedTime.hour, _selectedTime.minute),
-         [HH, ':', nn]).toString();
-     print("selectedTime :$_selectedTime $_hour $_minute");
-     var sec = (new DateTime.now());
-     final dateStr =
-         "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_hour}:${_minute}:${sec.second}";
-     final formatter = DateFormat(r'''yyyy-mm-dd hh:mm:ss''');
-     print("dateStr :$dateStr");
-     final dateTimeFromStr = formatter.parse(dateStr);
-     _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
+      _hour = _selectedTime.hour.toString();
+      _minute = _selectedTime.minute.toString();
+      _time = _hour + ' : ' + _minute;
+      _timeController.text = _time;
+      _timeController.text = formatDate(
+          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
+              _selectedTime.hour, _selectedTime.minute),
+          [HH, ':', nn]).toString();
+      print("selectedTime :$_selectedTime $_hour $_minute");
+      var sec = (new DateTime.now());
+      final dateStr =
+          "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_hour}:${_minute}:${sec.second}";
+      final formatter = DateFormat(r'''yyyy-mm-dd hh:mm:ss''');
+      print("dateStr :$dateStr");
+      final dateTimeFromStr = formatter.parse(dateStr);
+      _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
 
-     notifyListeners();
-   }catch(error){
-     print("Error select time :$error");
-   }
+      notifyListeners();
+    }catch(error){
+      print("Error select time: $error");
+    }
   }
 
   submitValue() async {
@@ -439,29 +466,29 @@ class CameraViewModel extends BaseViewModel {
   }
 
   clearData() {
-   try{
-     _loading = true;
-     _myMarker = [];
-     _textLocationName = new TextEditingController(text: 'สถานที่เกิดเหตุ');
-     _textElephantAmount = new TextEditingController(text: "");
-     _textNote = new TextEditingController(text: "");
-     _isSelected = [false, false, false, false];
-     _imagesFile = null;
-     _selectedTime = TimeOfDay.now();
-     _favoriteLocationValue = 1;
-     _controllerCompleter = Completer();
-     notifyListeners();
-   }catch(error){
-     print("Error clear data: $error");
-   }
+    try{
+      _loading = true;
+      _myMarker = [];
+      _textLocationName = new TextEditingController(text: 'สถานที่เกิดเหตุ');
+      _textElephantAmount = new TextEditingController(text: "");
+      _textNote = new TextEditingController(text: "");
+      _isSelected = [false, false, false, false];
+      _imagesFile = null;
+      _selectedTime = TimeOfDay.now();
+      _favoriteLocationValue = 1;
+      _controllerCompleter = Completer();
+      notifyListeners();
+    }catch(error){
+      print("Error clear data $error");
+    }
   }
 
   getAccountId() async {
-   try{
-     SharedPreferences prefs = await SharedPreferences.getInstance();
-     return await prefs.get(Values.authenicized_key);
-   }catch(error){
-     print("Error get Account: $error");
-   }
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return await prefs.get(Values.authenicized_key);
+    }catch(error){
+      print("Error get account ID $error");
+    }
   }
 }

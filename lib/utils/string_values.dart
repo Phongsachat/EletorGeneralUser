@@ -24,6 +24,7 @@ class StringValue {
   static const pleaseEnterlocation = "กรุณากรอกชื่อสถานทีเกิดเหตุ";
   static const accept = "ตกลง";
   static const cancel = "ยกเลิก";
+  static const date = "วันเกิดเหตุ";
   static const time = "เวลาเกิดเหตุ";
   static const elephantAmount = "จำนวนช้าง";
   static const pleaseEnterElephantAmount = "กรุณากรอกจำนวน";
@@ -48,6 +49,7 @@ class StringValue {
   static const favoriteLocationValue3 = "เขาใหญ่บีบีกัน";
   static const favoriteLocationValue4 = "Khaoyai Casa Resort";
   static const notUseFavoriteLocation = "ปักหมุดด้วยตนเอง";
+  static const elephantUnit = "ตัว";
 
   ///Camera view
   static const cameraPermissionTitle = "ขออนุญาติเข้าถึงกล้อง";
