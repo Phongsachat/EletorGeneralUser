@@ -72,6 +72,7 @@ class MissionCardsViewModel extends ChangeNotifier {
           .then((value) => value.docs.length);
 
       if (lengthDocsOfCollect == 0) {
+        _commentsList.clear();
         _isLoading = false;
         _haveAnyComment = false;
       } else {
@@ -80,7 +81,7 @@ class MissionCardsViewModel extends ChangeNotifier {
 
         _commentLength = mapComments.length;
 
-        if (mapComments.isNotEmpty && !_haveAnyComment) {
+        if (mapComments.isNotEmpty) {
           _commentsList.clear();
           await pushComments(mapComments);
           _haveAnyComment = true;

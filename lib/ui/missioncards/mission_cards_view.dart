@@ -75,6 +75,7 @@ class MissionCardsView extends StatelessWidget {
                                 imagePath: missionModel.photoURL,
                                 radius: 8,
                                 width: size.width,
+                                height: 250.0
                               ),
                             )
                           : loader(
