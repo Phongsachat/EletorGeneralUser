@@ -17,6 +17,17 @@ class MissionList extends StatelessWidget {
   Widget build(BuildContext context) {
 
     Size size = MediaQuery.of(context).size;
+    String _maxLengthTitle;
+    int _maxLengthValue;
+
+    if (title.length > 17) {
+      _maxLengthValue = 17;
+      _maxLengthTitle = title.replaceRange(
+          _maxLengthValue, title.toString().length, '...');
+    } else {
+      _maxLengthValue = title.toString().length;
+      _maxLengthTitle = title;
+    }
 
     return Container(
       height: 70,
@@ -39,7 +50,7 @@ class MissionList extends StatelessWidget {
                   (severityId!=null)?
                   Container(padding: EdgeInsets.only(bottom: 5),
                       child: SeverityLevels(levels: (severityId==1)? Levels.HIGH : Levels.LOW).severityWidget()) :Container(),
-                  HeaderText(title: title),
+                  HeaderText(title: _maxLengthTitle),
                   Row(
                     children: <Widget>[
                       SizedBox(width: 4,),
