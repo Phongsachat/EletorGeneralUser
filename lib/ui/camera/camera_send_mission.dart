@@ -114,6 +114,8 @@ class CameraSendMission extends StatelessWidget {
                                                               favoriteLocation(
                                                                   states,
                                                                   context),
+                                                              datePicker(states,
+                                                                  context),
                                                               timePicker(states,
                                                                   context),
                                                               elephantAmount(
@@ -584,6 +586,87 @@ class CameraSendMission extends StatelessWidget {
         ));
   }
 
+  Container datePicker(states, context) {
+    return Container(
+        margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+        padding: const EdgeInsets.all(10.0),
+        decoration: new BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 8,
+                offset: Offset(0, 3), // changes position of shadow
+              )
+            ],
+            borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(8.0),
+                topRight: const Radius.circular(8.0),
+                bottomLeft: const Radius.circular(8.0),
+                bottomRight: const Radius.circular(8.0))),
+        child: Container(
+          child: Row(children: [
+            Flexible(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Text(StringValue.date,
+                    style: TextStyle(
+                        fontFamily: primaryFontFamily,
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold)),
+              ),
+            ),
+            Flexible(
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    child: InkWell(
+                      onTap: () {
+                        states.selectDate(context);
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2.6,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: Color(0xffF5F5F5),
+                            borderRadius: new BorderRadius.only(
+                                topLeft: const Radius.circular(8.0),
+                                topRight: const Radius.circular(8.0),
+                                bottomLeft: const Radius.circular(8.0),
+                                bottomRight: const Radius.circular(8.0))),
+                        child: TextFormField(
+                          style: TextStyle(fontSize: 15),
+                          textAlign: TextAlign.center,
+                          onSaved: (String val1) {
+                            print("selectedDate : " + states.selectedDate);
+                            states.selectedDate = val1;
+                          },
+                          enabled: false,
+                          keyboardType: TextInputType.text,
+                          controller: states.dateController,
+                          decoration: InputDecoration(
+                              disabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide.none),
+                              // labelText: 'Time',
+                              contentPadding: EdgeInsets.all(5)),
+                        ),
+                      ),
+                    ),
+
+                    /* child:InkWell(
+                      onTap: () {
+                        states.selectTime(context);
+                      },*/
+                  ),
+                ],
+              ),
+            ),
+          ]),
+        ));
+  }
+
   Container timePicker(states, context) {
     return Container(
         margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -700,7 +783,58 @@ class CameraSendMission extends StatelessWidget {
                 bottomLeft: const Radius.circular(8.0),
                 bottomRight: const Radius.circular(8.0))),
         child: Container(
-          child: Row(children: [
+            height: 50,
+            child: Row(children: [
+              Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width/2.6,
+                  child: Text(StringValue.elephantAmount,
+                      style: TextStyle(
+                          fontFamily: primaryFontFamily,
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold)),
+                ),
+              ),
+              Container(
+                width: 100,
+                child: TextField(
+                  controller: states.textElephantAmount,
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    LengthLimitingTextInputFormatter(4),
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color(0xffF5F5F5),
+                    border: InputBorder.none,
+                    hintText: StringValue.pleaseEnterElephantAmount,
+                    hintStyle:
+                    TextStyle(fontFamily: primaryFontFamily, fontSize: 12),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: Text(StringValue.elephantUnit,
+                    style: TextStyle(
+                        fontFamily: primaryFontFamily,
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold)),
+              ),
+            ])
+          /*child: Row(children: [
             Flexible(
               child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -713,33 +847,32 @@ class CameraSendMission extends StatelessWidget {
               ),
             ),
             Flexible(
-              child: TextField(
-                controller: states.textElephantAmount,
-                maxLines: 1,
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  LengthLimitingTextInputFormatter(4),
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xffF5F5F5),
-                  border: InputBorder.none,
-                  hintText: StringValue.pleaseEnterElephantAmount,
-                  hintStyle:
-                  TextStyle(fontFamily: primaryFontFamily, fontSize: 12),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                child: TextField(
+              controller: states.textElephantAmount,
+              maxLines: 1,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                LengthLimitingTextInputFormatter(4),
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              ],
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xffF5F5F5),
+                border: InputBorder.none,
+                hintText: StringValue.pleaseEnterElephantAmount,
+                hintStyle:
+                    TextStyle(fontFamily: primaryFontFamily, fontSize: 12),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-            ),
-          ]),
+            ))
+          ]),*/
         ));
   }
 
@@ -786,22 +919,22 @@ class CameraSendMission extends StatelessWidget {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Icon(Character.eating,
+                          child: Icon(Character.bx_restaurant,
                               size: MediaQuery.of(context).size.height / 25),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Icon(Character.road,
+                          child: Icon(Character.road_variant,
                               size: MediaQuery.of(context).size.height / 25),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Icon(Character.elephant,
+                          child: Icon(Character.bx_angry,
                               size: MediaQuery.of(context).size.height / 25),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Icon(Character.car,
+                          child: Icon(Character.bxs_car_crash,
                               size: MediaQuery.of(context).size.height / 25),
                         ),
                       ],
