@@ -1055,7 +1055,7 @@ class CameraSendMission extends StatelessWidget {
                   child: RoundedButton(
                     onTap: () async {
                       // isConnected!!!
-                      if (true) {
+                      if (vm2.isConnected==true) {
                         Provider.of<LoadingViewModel>(context, listen: false)
                             .showLoading();
                         await states.submitValue();

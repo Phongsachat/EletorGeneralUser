@@ -254,7 +254,7 @@ class HomeView extends StatelessWidget {
                                                                       () async {
 
                                                                     // isConnected!!!
-                                                                    if(true){
+                                                                    if(vm2.isConnected==true){
                                                                       print("homeView Select mission");
                                                                       vm1.changeHomeState(
                                                                           false);
