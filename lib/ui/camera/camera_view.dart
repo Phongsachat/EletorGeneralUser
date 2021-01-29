@@ -15,12 +15,6 @@ import 'package:provider/provider.dart';
 import 'camera_send_mission.dart';
 
 class CameraView extends StatelessWidget {
-
-  String username;
-  String imageUrl;
-
-  CameraView({this.username,this.imageUrl});
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<CameraViewModel,ConnectionViewModel>(builder: (context, states, vm2, child) {
@@ -53,73 +47,135 @@ class CameraView extends StatelessWidget {
     });
   }
 
-  showChoiceDialog(BuildContext context) {
-    return showDialog(
+  showChoiceDialog(context,states){
+    NDialog(
+      dialogStyle: DialogStyle(titleDivider: true),
+      title: Text(StringValue.sourceByGalleryOrCameraTitle,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: primaryFontFamily,
+              fontSize: 18,
+              color: Colors.black54,
+              fontWeight: FontWeight.bold)),
+      content: Text(StringValue.sourceByGalleryOrCameraDetails,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: primaryFontFamily,
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.normal)),
+      actions: [
+        FlatButton(
+            child: Text(StringValue.gallery,
+                style: TextStyle(
+                    fontFamily: primaryFontFamily,
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                  color: Colors.grey[200], width: 1, style: BorderStyle.solid),
+            ),
+            onPressed: () async {
+              await Permission.storage.request();
+              var status = await Permission.storage.status;
+              if (status.isGranted) {
+                states.openGallery(context);
+              } else {
+                permissionStorage(context, states);
+              }
+            }),
+        FlatButton(
+            child: Text(StringValue.camera,
+                style: TextStyle(
+                    fontFamily: primaryFontFamily,
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                  color: Colors.grey[200], width: 1, style: BorderStyle.solid),
+            ),
+            onPressed: () async {
+              await Permission.camera.request();
+              var status = await Permission.camera.status;
+              if (status.isGranted) {
+                states.openCamera(context);
+              } else {
+                permissionCamera(context, states);
+              }
+            })
+      ],
+    ).show(context);
+  }
+
+  /*showChoiceDialog( context) {
+     showDialog(
         context: context,
         builder: (BuildContext context) {
           return Consumer<CameraViewModel>(
               builder: (context, states, child) {
-                return AlertDialog(
-                  title: AutoSizeText(
-                    StringValue.sourceByGalleryOrCamera,
-                    maxLines: 1,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: primaryFontFamily,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  content: SingleChildScrollView(
-                    child: ListBody(
-                      children: [
-                        GestureDetector(
-                          child: AutoSizeText(
-                            StringValue.gallery,
-                            maxLines: 1,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontFamily: primaryFontFamily,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          onTap: () async {
-                            await Permission.storage.request();
-                            var status = await Permission.storage.status;
-                            if (status.isGranted) {
-                              states.openGallery(context);
-                            } else {
-                              permissionStorage(context, states);
-                            }
-                          },
-                        ),
-                        Padding(padding: EdgeInsets.all(8)),
-                        GestureDetector(
-                          child: AutoSizeText(
-                            StringValue.camera,
-                            maxLines: 1,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontFamily: primaryFontFamily,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          onTap: () async {
-                            await Permission.camera.request();
-                            var status = await Permission.camera.status;
-                            if (status.isGranted) {
-                              states.openCamera(context);
-                            } else {
-                              permissionCamera(context, states);
-                            }
-                          },
-                        )
-                      ],
+            return AlertDialog(
+              title: AutoSizeText(
+                StringValue.sourceByGalleryOrCamera,
+                maxLines: 1,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontFamily: primaryFontFamily,
+                    fontWeight: FontWeight.bold),
+              ),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: [
+                    GestureDetector(
+                      child: AutoSizeText(
+                        StringValue.gallery,
+                        maxLines: 1,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontFamily: primaryFontFamily,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () async {
+                        await Permission.storage.request();
+                        var status = await Permission.storage.status;
+                        if (status.isGranted) {
+                          states.openGallery(context);
+                        } else {
+                          permissionStorage(context, states);
+                        }
+                      },
                     ),
-                  ),
-                );
-              });
+                    Padding(padding: EdgeInsets.all(8)),
+                    GestureDetector(
+                      child: AutoSizeText(
+                        StringValue.camera,
+                        maxLines: 1,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontFamily: primaryFontFamily,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () async {
+                        await Permission.camera.request();
+                        var status = await Permission.camera.status;
+                        if (status.isGranted) {
+                          states.openCamera(context);
+                        } else {
+                          permissionCamera(context, states);
+                        }
+                      },
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
         });
-  }
+  }*/
 
   Widget haveImage(BuildContext context, File imagesFile ,states ,vm2) {
     return Column(children: [
@@ -177,7 +233,7 @@ class CameraView extends StatelessWidget {
                         // isConnected!!!
                         if(true){
                           states.initState();
-                          Get.to(CameraSendMission(username: username,imageUrl: imageUrl));
+                          Get.to(CameraSendMission());
                         }else{
                           reportDisconnected(context);
                         }
@@ -209,7 +265,7 @@ class CameraView extends StatelessWidget {
                     size: MediaQuery.of(context).size.height / 4,
                     color: Colors.black),
                 AutoSizeText(
-                  StringValue.sourceByGalleryOrCamera,
+                  StringValue.sourceByGalleryOrCameraTitle,
                   maxLines: 1,
                   style: TextStyle(
                       color: Colors.black,
@@ -236,7 +292,7 @@ class CameraView extends StatelessWidget {
                   await Permission.location.request();
                   var status = await Permission.location.status;
                   if (status.isGranted) {
-                    showChoiceDialog(context);
+                    showChoiceDialog(context,states);
                   } else {
                     permissionLocation(context);
                   }
