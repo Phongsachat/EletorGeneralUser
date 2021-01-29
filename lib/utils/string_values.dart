@@ -35,7 +35,8 @@ class StringValue {
   static const notHaveImageSelected = "ไม่มีรูปภาพที่ถูกเลือก";
   static const gallery = "อัลบั้ม";
   static const camera = "กล้อง";
-  static const sourceByGalleryOrCamera = "เลือกรูปภาพจาก ?";
+  static const sourceByGalleryOrCameraTitle = "เลือกรูปภาพ";
+  static const sourceByGalleryOrCameraDetails = "กรุณาเลือกรูปภาพจากอัลบั้มหรือกล้องถ่ายรูป";
   static const errorValueNull = "ข้อมูลไม่ครบถ้วน";
   static const sendReportCompleteTitle = "ส่งรายงานสำเร็จ";
   static const sendReportCompleteContent =
