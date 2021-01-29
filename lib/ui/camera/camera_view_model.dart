@@ -108,10 +108,10 @@ class CameraViewModel extends BaseViewModel {
   Completer<GoogleMapController> get controllerCompleter =>
       _controllerCompleter;
 
-  /*CameraViewModel() {
+  CameraViewModel() {
     initState();
     notifyListeners();
-  }*/
+  }
 
   initState() async {
     //_selectedTime = null;

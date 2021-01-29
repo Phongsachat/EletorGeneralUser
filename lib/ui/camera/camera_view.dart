@@ -229,15 +229,19 @@ class CameraView extends StatelessWidget {
                           width: MediaQuery.of(context).size.height / 10,
                           height: MediaQuery.of(context).size.height / 10,
                           child: Icon(Icons.send_rounded)),
-                      onTap: () {
+                      onTap: () async {
                         // isConnected!!!
-                        if(true){
-                          states.initState();
-                          Get.to(CameraSendMission());
+                        var serviceStatus = await Permission.location.serviceStatus;
+                        if(serviceStatus.isEnabled){
+                          if(vm2.isConnected==true){
+                            states.initState();
+                            Get.to(CameraSendMission());
+                          }else{
+                            reportDisconnected(context);
+                          }
                         }else{
-                          reportDisconnected(context);
+                          locationServiceIsDisabled(context);
                         }
-
                       },
                     ),
                   ),
@@ -421,7 +425,7 @@ class CameraView extends StatelessWidget {
           ],
         ));
   }
-  reportDisconnected(BuildContext context) {
+  reportDisconnected(context) {
     NDialog(
       dialogStyle: DialogStyle(titleDivider: true),
       title: Text(StringValue.reportDisconnectedTitle,
@@ -432,6 +436,42 @@ class CameraView extends StatelessWidget {
               color: Colors.red,
               fontWeight: FontWeight.bold)),
       content: Text(StringValue.reportDisconnectedDetails,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: primaryFontFamily,
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.normal)),
+      actions: [
+        FlatButton(
+            child: Text(StringValue.accept,
+                style: TextStyle(
+                    fontFamily: primaryFontFamily,
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                  color: Colors.grey[200], width: 1, style: BorderStyle.solid),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ],
+    ).show(context);
+  }
+
+  locationServiceIsDisabled(context) {
+    NDialog(
+      dialogStyle: DialogStyle(titleDivider: true),
+      title: Text(StringValue.locationIsDisabledTitle,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: primaryFontFamily,
+              fontSize: 18,
+              color: Colors.red,
+              fontWeight: FontWeight.bold)),
+      content: Text(StringValue.locationIsDisabledDetails,
           textAlign: TextAlign.center,
           style: TextStyle(
               fontFamily: primaryFontFamily,

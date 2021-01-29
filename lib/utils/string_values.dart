@@ -63,6 +63,8 @@ class StringValue {
   static const locationPermissionDetails =
       "แอพพลิเคชั่นต้องการเข้าถึงข้อมูลที่อยู่พื่อใช้งานฟังก์ชั่นการแจ้งเตือน กรุณาอนุญาติการเข้าถึงข้อมูลที่อยู่";
   static const setting = "ตั้งค่า";
+  static const locationIsDisabledTitle = "กรุณาเปิดตำแหน่งที่ตั้ง";
+  static const locationIsDisabledDetails = "ท่านสามารถเปิดตำแหน่งที่ตั้งได้โดยการเข้าไปที่ตั้งค่าและเปิดตำแหน่งที่ตั้ง";
 
   ///Menu Bar
   static const menu1 = "หน้าแรก";

@@ -125,7 +125,7 @@ class SignInView extends StatelessWidget {
         print("onTap : ");
 
         // isConnected!!!
-        if(false){
+        if(vm1.isConnected==false){
           reportDisconnected(context);
         }else{
           await vm2.signIn();
