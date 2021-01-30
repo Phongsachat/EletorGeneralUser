@@ -27,7 +27,7 @@ class ContentTextBox extends StatelessWidget {
     return Center(
       child: Container(
         margin:  EdgeInsets.all(margin ?? 10),
-        padding: EdgeInsets.all(padding ?? 5),
+        padding: EdgeInsets.all(padding ?? 10),
         height: height ?? size.height * 0.09,
         width: width ?? size.width * 0.7,
         decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(3)),

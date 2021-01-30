@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Eletor/utils/googles/firestore.dart';
 import 'package:Eletor/utils/shared_preference.dart';
 import 'package:Eletor/utils/values.dart';
@@ -8,7 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class MissionCardsViewModel extends ChangeNotifier {
 
   int _commentLength = 0;
-
+  Completer<GoogleMapController> _mapController = Completer();
   List<List<String>> _commentsList = List<List<String>>();
 
   List<String> _imgOfficerList = List<String>();
@@ -48,7 +50,7 @@ class MissionCardsViewModel extends ChangeNotifier {
   set initialize(String missionID) => init(missionID: missionID);
 
   List<Marker> get myMarker => _myMarker;
-
+  Completer<GoogleMapController> get mapController => _mapController;
   MissionCardsViewModel();
 
   init({String missionID}) async {

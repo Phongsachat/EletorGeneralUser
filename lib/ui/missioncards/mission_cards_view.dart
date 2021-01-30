@@ -18,6 +18,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:provider/provider.dart';
@@ -82,29 +83,76 @@ class MissionCardsView extends StatelessWidget {
                               _loadingComment(size.width, size.height * 0.35)),
                       InkWell(
                         onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  scrollable: true,
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      HeaderText(
-                                          title: missionModel.locationName,
-                                          size: 16),
-                                      TimeNotifyText(
-                                        text: missionModel.situationTime,
-                                      ),
-                                      Container(
-                                          margin: EdgeInsets.only(top: 8),
-                                          height: size.height * 0.4,
-                                          child: googleMap(missionModel.latLng,
-                                              StringValue.mapMissionCard))
-                                    ],
+                          NDialog(
+                            title: Text(missionModel.locationName,
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontFamily: primaryFontFamily,
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                            content: Container(
+                              height: 200,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    missionModel.situationTime,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                        fontFamily: primaryFontFamily),
                                   ),
-                                );
-                              });
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Flexible(
+                                    child: ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.all(Radius.circular(8)),
+                                      child: GoogleMap(
+                                          initialCameraPosition: CameraPosition(
+                                              target: LatLng(
+                                                  missionModel.latLng.latitude,
+                                                  missionModel
+                                                      .latLng.longitude),
+                                              zoom: 16),
+                                          markers: Set.from(setMark(
+                                              missionModel.latLng.latitude,
+                                              missionModel.latLng.longitude,
+                                              StringValue.mapMissionCard)),
+                                          mapType: MapType.normal,
+                                          onMapCreated:
+                                              (GoogleMapController controller) {
+                                            vm.mapController
+                                                .complete(controller);
+                                          }),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              FlatButton(
+                                  child: Text(StringValue.accept,
+                                      style: TextStyle(
+                                          fontFamily: primaryFontFamily,
+                                          fontSize: 15,
+                                          color: btnAccept,
+                                          fontWeight: FontWeight.bold)),
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        color: Colors.grey[200],
+                                        width: 1,
+                                        style: BorderStyle.solid),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }),
+                            ],
+                          ).show(context);
                         },
                         child: (!vm.isLoading)
                             ? Container(

@@ -22,18 +22,12 @@ import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class SignInView extends StatelessWidget {
-  String _username;
-  String _password;
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
-
     return ViewModelBuilder<ConnectionViewModel>.reactive(
         viewModelBuilder: () => ConnectionViewModel(),
         onModelReady: (model) async {
@@ -142,7 +136,7 @@ class SignInView extends StatelessWidget {
             await vm2.saveSharePref(uid);
             await vm2.saveUserInfo(username,imageUrl);
 
-            Get.to(MenuView(imageUrl: imageUrl, username: username,));
+            Get.off(MenuView(imageUrl: imageUrl, username: username,));
           }
         }
         // }else{
