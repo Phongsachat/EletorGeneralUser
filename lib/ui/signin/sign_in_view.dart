@@ -28,11 +28,7 @@ class SignInView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ConnectionViewModel>.reactive(
-        viewModelBuilder: () => ConnectionViewModel(),
-        onModelReady: (model) async {
-          await model.init();
-        },
+    return Consumer<ConnectionViewModel>(
         builder: (context, vm1, child) =>
             Scaffold(
               body: ViewModelBuilder<SignInViewModel>.reactive(
