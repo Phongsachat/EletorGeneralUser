@@ -917,25 +917,37 @@ class CameraSendMission extends StatelessWidget {
                     ),
                     child: ToggleButtons(
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Icon(Character.bx_restaurant,
-                              size: MediaQuery.of(context).size.height / 25),
+                        Tooltip(
+                          message: StringValue.tooltipEat,textStyle: TextStyle(fontFamily: primaryFontFamily),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Icon(Character.bx_restaurant,
+                                size: MediaQuery.of(context).size.height / 25),
+                          ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Icon(Character.road_variant,
-                              size: MediaQuery.of(context).size.height / 25),
+                        Tooltip(
+                          message: StringValue.toolRoad,textStyle: TextStyle(fontFamily: primaryFontFamily),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Icon(Character.road_variant,
+                                size: MediaQuery.of(context).size.height / 25),
+                          ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Icon(Character.bx_angry,
-                              size: MediaQuery.of(context).size.height / 25),
+                        Tooltip(
+                          message: StringValue.toolAngry,textStyle: TextStyle(fontFamily: primaryFontFamily),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Icon(Character.bx_angry,
+                                size: MediaQuery.of(context).size.height / 25),
+                          ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Icon(Character.bxs_car_crash,
-                              size: MediaQuery.of(context).size.height / 25),
+                        Tooltip(
+                          message: StringValue.toolDestroy,textStyle: TextStyle(fontFamily: primaryFontFamily),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Icon(Character.bxs_car_crash,
+                                size: MediaQuery.of(context).size.height / 25),
+                          ),
                         ),
                       ],
                       onPressed: (int index) {
