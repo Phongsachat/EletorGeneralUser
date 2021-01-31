@@ -65,6 +65,10 @@ class StringValue {
   static const setting = "ตั้งค่า";
   static const locationIsDisabledTitle = "กรุณาเปิดตำแหน่งที่ตั้ง";
   static const locationIsDisabledDetails = "ท่านสามารถเปิดตำแหน่งที่ตั้งได้โดยการเข้าไปที่ตั้งค่าและเปิดตำแหน่งที่ตั้ง";
+  static const tooltipEat = "ช้างกำลังกินอาหาร";
+  static const toolRoad = "ช้างอยู่บนถนน";
+  static const toolAngry = "ช้างตกมัน";
+  static const toolDestroy = "ช้างทำลายทรัพย์สิน";
 
   ///Menu Bar
   static const menu1 = "หน้าแรก";
