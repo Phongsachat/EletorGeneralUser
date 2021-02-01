@@ -142,9 +142,10 @@ class ReportTile extends StatelessWidget {
           ),),
         Flexible(
           child: Container(
-            child: Text(
+            child: AutoSizeText(
               "ส่งรายงานแล้ว",
               maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: primaryFontFamily,
                 fontWeight: FontWeight.bold,
@@ -166,9 +167,10 @@ class ReportTile extends StatelessWidget {
         ),
         Flexible(
           child: Container(
-            child: Text(
+            child: AutoSizeText(
               "กำลังดำเนินการ",
               maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: primaryFontFamily,
                 fontWeight: FontWeight.bold,
@@ -189,9 +191,10 @@ class ReportTile extends StatelessWidget {
         ),
         Flexible(
           child: Container(
-            child: Text(
+            child: AutoSizeText(
               "ภารกิจสำเเร็จ",
               maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: primaryFontFamily,
                 fontWeight: FontWeight.bold,

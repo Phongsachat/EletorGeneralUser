@@ -29,6 +29,11 @@ class RoundedTextArea extends StatelessWidget {
         color: color,
         child: TextFormField(
           keyboardType: TextInputType.multiline,
+          style: TextStyle(
+              fontFamily: primaryFontFamily,
+              fontSize: 13,
+              color: Colors.black,
+              fontWeight: FontWeight.w600),
           maxLines: null,
           controller: controller,
           decoration: InputDecoration(

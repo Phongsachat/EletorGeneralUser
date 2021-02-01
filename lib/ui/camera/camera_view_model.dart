@@ -43,7 +43,7 @@ class CameraViewModel extends BaseViewModel {
   int _check;
   String _apiKey = 'AIzaSyCyThvaSaUxmZGCpKv-T4jfz6SL__hdCtU';
   TextEditingController _textNote = TextEditingController();
-  TextEditingController _textElephantAmount = TextEditingController();
+  TextEditingController _textElephantAmount = TextEditingController(text: '1');
   TextEditingController _textLocationName = TextEditingController();
   String _hour, _minute, _time;
   String _dateTime;
@@ -59,10 +59,10 @@ class CameraViewModel extends BaseViewModel {
   List<Placemark> _placemarks;
   int _favoriteLocationValue = 1;
   List<LatLng> _favoriteLocationLatLng = [
-    LatLng(14.5444219, 101.3886546),
-    LatLng(14.5356633, 101.3657372),
-    LatLng(14.5304641, 101.3674171),
-    LatLng(14.534946539691443, 101.38555398832288)
+    LatLng(4.557059962689536, 101.40119691280485),
+    LatLng(14.53317426889962, 101.36911111070357),
+    LatLng(14.528712016072662, 101.36946594280283),
+    LatLng(4.535288819093966, 101.3848664781)
   ];
 
   //ElephantCharacteristics List
@@ -122,29 +122,29 @@ class CameraViewModel extends BaseViewModel {
   }
 
   openGallery(BuildContext context) async {
-    try{
+    try {
       var pickedFile = await _picker.getImage(source: ImageSource.gallery);
       _imagesFile = File(pickedFile.path);
       Navigator.of(context).pop();
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error open gallery: $error");
     }
   }
 
   openCamera(BuildContext context) async {
-    try{
+    try {
       var pickedFile = await _picker.getImage(source: ImageSource.camera);
       _imagesFile = File(pickedFile.path);
       Navigator.of(context).pop();
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error open camera: $error");
     }
   }
 
   location() async {
-    try{
+    try {
       var position = await GeolocatorPlatform.instance
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
@@ -161,25 +161,49 @@ class CameraViewModel extends BaseViewModel {
       goToMe();
       print("location() working");
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error location $error");
     }
   }
 
-  loadingValue(){
+  loadingValue() {
     _loading = false;
     notifyListeners();
   }
 
   locationName() async {
-    try{
+    try {
       _placemarks = await placemarkFromCoordinates(_lat, _lng);
-      _textLocationName.text = _placemarks[0].street.toString();
+      if (_placemarks[0].street != '') {
+        textLocationName.text = _placemarks[0].street;
+      } else if (_placemarks[0].street == '' &&
+          _placemarks[0].subLocality != '') {
+        textLocationName.text = _placemarks[0].subLocality.toString();
+      } else if (_placemarks[0].street == '' &&
+          _placemarks[0].subLocality == '' &&
+          _placemarks[0].locality != '') {
+        textLocationName.text = _placemarks[0].locality.toString();
+      } else if (_placemarks[0].street == '' &&
+          _placemarks[0].subLocality == '' &&
+          _placemarks[0].locality == '' &&
+          _placemarks[0].subAdministrativeArea != '') {
+        textLocationName.text = _placemarks[0].subAdministrativeArea;
+      } else if (_placemarks[0].street == '' &&
+          _placemarks[0].subLocality == '' &&
+          _placemarks[0].locality == '' &&
+          _placemarks[0].subAdministrativeArea == '' &&
+          _placemarks[0].country != '') {
+        textLocationName.text = _placemarks[0].country;
+      } else {
+        textLocationName.text = 'Unknown';
+      }
+
       maxLength(_textLocationName);
-      await textLocationNameValue(_placemarks[0].street.toString());
-      print("locationName :"+_placemarks[0].street.toString());
+      // await textLocationNameValue(_placemarks[0].street.toString());
+      // print('${_placemarks[0]}');
+      // print("locationName :" + _placemarks[0].street.toString());
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error location name: $error");
     }
   }
@@ -189,9 +213,10 @@ class CameraViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  favoriteLocation(value, context) {
-    try{
+  favoriteLocation(value, context) async {
+    try {
       _favoriteLocationValue = value;
+      String locationNameChanged = '';
       switch (_favoriteLocationValue) {
         case 1:
           {
@@ -202,6 +227,7 @@ class CameraViewModel extends BaseViewModel {
         case 2:
           {
             _textLocationName.text = StringValue.favoriteLocationValue1;
+            locationNameChanged = StringValue.favoriteLocationValue1;
             _lat = _favoriteLocationLatLng[0].latitude;
             _lng = _favoriteLocationLatLng[0].longitude;
             maxLength(_textLocationName);
@@ -210,6 +236,7 @@ class CameraViewModel extends BaseViewModel {
         case 3:
           {
             _textLocationName.text = StringValue.favoriteLocationValue2;
+            locationNameChanged = StringValue.favoriteLocationValue2;
             _lat = _favoriteLocationLatLng[1].latitude;
             _lng = _favoriteLocationLatLng[1].longitude;
             maxLength(_textLocationName);
@@ -218,6 +245,7 @@ class CameraViewModel extends BaseViewModel {
         case 4:
           {
             _textLocationName.text = StringValue.favoriteLocationValue3;
+            locationNameChanged = StringValue.favoriteLocationValue3;
             _lat = _favoriteLocationLatLng[2].latitude;
             _lng = _favoriteLocationLatLng[2].longitude;
             maxLength(_textLocationName);
@@ -226,6 +254,7 @@ class CameraViewModel extends BaseViewModel {
         case 5:
           {
             _textLocationName.text = StringValue.favoriteLocationValue4;
+            locationNameChanged = StringValue.favoriteLocationValue4;
             _lat = _favoriteLocationLatLng[3].latitude;
             _lng = _favoriteLocationLatLng[3].longitude;
             maxLength(_textLocationName);
@@ -233,23 +262,45 @@ class CameraViewModel extends BaseViewModel {
           break;
         default:
           {
-            print("favotiteLocation = 6");
+            print("favorite Location = 6");
           }
           break;
       }
-      goToMe();
+      await changedLocationByDropDown();
+      _showNameLocation = locationNameChanged;
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error favorite Location: $error");
     }
   }
 
+  changedLocationByDropDown() async {
+    try {
+      _myMarker = [];
+      _myMarker.add(Marker(
+          markerId: MarkerId('0'),
+          position: LatLng(_lat, _lng),
+          draggable: true,
+          onDragEnd: (dragEndPosition) {
+            print(dragEndPosition);
+          }));
+      GoogleMapController controller = await _controllerCompleter.future;
+      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(_lat, _lng),
+        zoom: 16,
+      )));
+      notifyListeners();
+    } catch (error) {
+      print("Error go to me: $error");
+    }
+  }
+
   pickLocation(context, location) async {
-    try{
+    try {
       LocationResult result = await showLocationPicker(
         context,
         _apiKey,
-        initialCenter: LatLng(location.latitude, location.longitude),
+        initialCenter: LatLng(_lat, _lng),
         myLocationButtonEnabled: true,
         layersButtonEnabled: true,
         countries: ['TH'],
@@ -264,13 +315,13 @@ class CameraViewModel extends BaseViewModel {
       int _flValue = 6;
       favoriteLocation(_flValue, context);
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error pick location: $error");
     }
   }
 
   localDateTime() {
-    try{
+    try {
       _selectedDate = DateTime.now();
       _dateTime = DateFormat('dd MMM yyyy').format(_selectedDate);
 
@@ -287,13 +338,13 @@ class CameraViewModel extends BaseViewModel {
       _dateController.text = _dateTime;
 
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error local date time: $error");
     }
   }
 
   timeStamp() {
-    try{
+    try {
       var sec = (new DateTime.now());
       final dateStr =
           "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_selectedTime.hour}:${_selectedTime.minute}:${sec.second} UTC+7";
@@ -301,13 +352,13 @@ class CameraViewModel extends BaseViewModel {
 
       final dateTimeFromStr = formatter.parse(dateStr);
       _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
-    }catch(error){
+    } catch (error) {
       print("Error timestamp $error");
     }
   }
 
   maxLength(_textLocationName) {
-    try{
+    try {
       if (textLocationName.text.toString().length > 20) {
         _maxLengthValue = 20;
         _showNameLocation = textLocationName.text.replaceRange(
@@ -317,26 +368,28 @@ class CameraViewModel extends BaseViewModel {
         _showNameLocation = textLocationName.text;
       }
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error max length: $error");
     }
   }
 
   isSelectedValue(int index) {
-    try{
-      for (int buttonIndex = 0; buttonIndex < _isSelected.length; buttonIndex++) {
+    try {
+      for (int buttonIndex = 0;
+          buttonIndex < _isSelected.length;
+          buttonIndex++) {
         if (buttonIndex == index) {
           _isSelected[buttonIndex] = !_isSelected[buttonIndex];
         }
       }
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error is selected value $error");
     }
   }
 
   goToMe() async {
-    try{
+    try {
       _myMarker = [];
       _myMarker.add(Marker(
           markerId: MarkerId('0'),
@@ -352,7 +405,7 @@ class CameraViewModel extends BaseViewModel {
       )));
       locationName();
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error go to me: $error");
     }
   }
@@ -364,17 +417,17 @@ class CameraViewModel extends BaseViewModel {
         initialDatePickerMode: DatePickerMode.day,
         firstDate: DateTime(2021),
         lastDate: DateTime(2121));
-    if (picked != null){_selectedDate = picked;
-    _dateController.text = DateFormat("dd MMM yyyy").format(_selectedDate);}
-    print("date : "+_dateController.text);
+    if (picked != null) {
+      _selectedDate = picked;
+      _dateController.text = DateFormat("dd MMM yyyy").format(_selectedDate);
+    }
+    print("date : " + _dateController.text);
     timeStamp();
     notifyListeners();
   }
 
-
-
   selectTime(dateTime) async {
-    try{
+    try {
       print("dateTime $dateTime");
       _selectedTime = dateTime;
 
@@ -396,16 +449,27 @@ class CameraViewModel extends BaseViewModel {
       _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
 
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error select time: $error");
     }
   }
 
   submitValue() async {
-    try{
+    try {
+      String txtReportDetails = textNote.text;
+      if (textNote.text == "") {
+        txtReportDetails = 'ไม่ใส่ข้อมูล';
+      }
+      //case user input 0 number
+      if (_textElephantAmount.text == "0" ||
+          _textElephantAmount.text == "00" ||
+          _textElephantAmount.text == "000" ||
+          _textElephantAmount.text == "000") {
+        _textElephantAmount.text = '1';
+      }
       Report report = new Report();
       if (_textElephantAmount.text == "" ||
-          _textNote.text == "" ||
+          // _textNote.text == "" ||
           imagesFile == null ||
           _textLocationName.text == "" ||
           _lat == null ||
@@ -419,7 +483,7 @@ class CameraViewModel extends BaseViewModel {
 
         //Initial elephantCharacteristics
         List<ElephantCharacteristics> elephantChaList =
-        new List<ElephantCharacteristics>();
+            new List<ElephantCharacteristics>();
         for (int i = 0; i < elpCharacterList.length; i++) {
           elephantChaList.add(ElephantCharacteristics(
               elephantCharacterId: "E${i + 1}",
@@ -441,14 +505,14 @@ class CameraViewModel extends BaseViewModel {
           ..locationGroupId = ""
           ..timeStamp = _timeStampValue
           ..elephantAmount = int.parse(textElephantAmount.text)
-          ..reportDetails = textNote.text
+          ..reportDetails = txtReportDetails
           ..reportStatus = 0
           ..image = img64
           ..locationName = textLocationName.text
           ..pinLat = _lat
           ..pinLng = _lng
 
-        ///TODO: create pinLatLng and userLatLng!
+          ///TODO: create pinLatLng and userLatLng!
           ..userLat = _userLat
           ..userLng = _userLng
           ..elephantCharacteristicsList = elephantChaList;
@@ -460,13 +524,13 @@ class CameraViewModel extends BaseViewModel {
         _valueCheck = true;
       }
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error submit value: $error");
     }
   }
 
   clearData() {
-    try{
+    try {
       _loading = true;
       _myMarker = [];
       _textLocationName = new TextEditingController(text: 'สถานที่เกิดเหตุ');
@@ -478,16 +542,16 @@ class CameraViewModel extends BaseViewModel {
       _favoriteLocationValue = 1;
       _controllerCompleter = Completer();
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error clear data $error");
     }
   }
 
   getAccountId() async {
-    try{
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       return await prefs.get(Values.authenicized_key);
-    }catch(error){
+    } catch (error) {
       print("Error get account ID $error");
     }
   }

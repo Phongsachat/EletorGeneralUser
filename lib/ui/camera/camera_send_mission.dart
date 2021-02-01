@@ -20,138 +20,110 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class CameraSendMission extends StatelessWidget {
-
-  final String username;
-  final String imageUrl;
-
-  CameraSendMission({this.username,this.imageUrl});
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<CameraViewModel, ConnectionViewModel>(
         builder: (context, states, vm2, child) {
-          return states.loading
-              ? onLoad(context)
-              : Scaffold(
+      return states.loading
+          ? onLoad(context)
+          : Scaffold(
               body: LoadingOverlay(
-                isLoading: context.watch<LoadingViewModel>().isPageLoading,
-                progressIndicator: spinkitLoading,
-                color: overlayLoadingColor,
-                opacity: overlayLoadingOpacity,
-                child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Color(0xff616F38), Color(0xffC1DE70)]),
-                    ),
-                    child: GestureDetector(
-                      onTap: () async {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                      },
-                      child: Container(
-                        height: MediaQuery.of(context).size.height,
-                        child: SingleChildScrollView(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                          child: Column(
-                            children: [
-                              Column(
+              isLoading: context.watch<LoadingViewModel>().isPageLoading,
+              progressIndicator: spinkitLoading,
+              color: overlayLoadingColor,
+              opacity: overlayLoadingOpacity,
+              child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0xff616F38), Color(0xffC1DE70)]),
+                  ),
+                  child: GestureDetector(
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height,
+                      child: Column(
+                        children: [
+                          HeaderApp(),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                              child: Column(
                                 children: [
-                                  HeaderApp(),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                    child: Container(
+                                      decoration: new BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: new BorderRadius.all(
+                                            Radius.circular(8.0)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 5,
+                                            blurRadius: 8,
+                                            offset: Offset(0,
+                                                3), // changes position of shadow
+                                          ),
+                                        ],
+                                      ),
+                                      width: double.infinity,
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height -
+                                                100,
+                                        child: Column(
+                                          children: [
+                                            showImageSelected(states, context),
+                                            Container(
+                                              child: Expanded(
+                                                child: ListView(
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        locationAndDatetime(
+                                                            states, context),
+                                                        favoriteLocation(
+                                                            states, context),
+                                                        datePicker(
+                                                            states, context),
+                                                        timePicker(
+                                                            states, context),
+                                                        elephantAmount(
+                                                            states, context),
+                                                        elephantCharacteristics(
+                                                            states, context),
+                                                        reportDetails(
+                                                            states, context),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            submitAndCancel(
+                                                states, context, vm2)
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                child: Column(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Container(
-                                          decoration: new BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: new BorderRadius.only(
-                                                topLeft:
-                                                const Radius.circular(8.0),
-                                                topRight:
-                                                const Radius.circular(8.0),
-                                                bottomLeft:
-                                                const Radius.circular(8.0),
-                                                bottomRight:
-                                                const Radius.circular(8.0)),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color:
-                                                Colors.grey.withOpacity(0.5),
-                                                spreadRadius: 5,
-                                                blurRadius: 8,
-                                                offset: Offset(0,
-                                                    3), // changes position of shadow
-                                              ),
-                                            ],
-                                          ),
-                                          width: double.infinity,
-                                          child: Column(
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  showImageSelected(
-                                                      states, context),
-                                                  Container(
-                                                    child: Container(
-                                                      height:
-                                                      MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                          1.90,
-                                                      child: ListView(
-                                                        children: [
-                                                          Column(
-                                                            children: [
-                                                              locationAndDatetime(
-                                                                  states,
-                                                                  context),
-                                                              favoriteLocation(
-                                                                  states,
-                                                                  context),
-                                                              datePicker(states,
-                                                                  context),
-                                                              timePicker(states,
-                                                                  context),
-                                                              elephantAmount(
-                                                                  states,
-                                                                  context),
-                                                              elephantCharacteristics(
-                                                                  states,
-                                                                  context),
-                                                              reportDetails(
-                                                                  states,
-                                                                  context),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  submitAndCancel(
-                                                      states, context, vm2)
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    )),
-              ));
-        });
+                    ),
+                  )),
+            ));
+    });
   }
 
   Container showImageSelected(states, context) {
@@ -215,7 +187,9 @@ class CameraSendMission extends StatelessWidget {
                                 margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(states.showNameLocation,
+                                  child: Text(
+                                      states.showNameLocation ??
+                                          "Unnamed place",
                                       style: TextStyle(
                                           fontFamily: primaryFontFamily,
                                           fontSize: 15,
@@ -237,29 +211,36 @@ class CameraSendMission extends StatelessWidget {
                                       return AlertDialog(
                                         title: Center(
                                             child: Column(
-                                              children: [
-                                                Text(StringValue.location,
-                                                    style: TextStyle(
-                                                        fontFamily:
+                                          children: [
+                                            Text(StringValue.location,
+                                                style: TextStyle(
+                                                    fontFamily:
                                                         primaryFontFamily,
-                                                        fontSize: 15,
-                                                        color: Colors.black,
-                                                        fontWeight:
+                                                    fontSize: 15,
+                                                    color: Colors.black,
+                                                    fontWeight:
                                                         FontWeight.bold)),
-                                                Text(states.dateTime,
-                                                    style: TextStyle(
-                                                        fontFamily:
+                                            Text(states.dateTime,
+                                                style: TextStyle(
+                                                    fontFamily:
                                                         primaryFontFamily,
-                                                        fontSize: 15,
-                                                        color: Colors.grey))
-                                              ],
-                                            )),
+                                                    fontSize: 15,
+                                                    color: Colors.grey))
+                                          ],
+                                        )),
                                         content: SingleChildScrollView(
                                           child: ListBody(
                                             children: <Widget>[
                                               TextField(
                                                 controller:
-                                                states.textLocationName,
+                                                    states.textLocationName,
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        primaryFontFamily,
+                                                    fontSize: 13,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                                 maxLines: 4,
                                                 decoration: InputDecoration(
                                                   filled: true,
@@ -269,23 +250,23 @@ class CameraSendMission extends StatelessWidget {
                                                       .pleaseEnterlocation,
                                                   hintStyle: TextStyle(
                                                       fontFamily:
-                                                      primaryFontFamily,
+                                                          primaryFontFamily,
                                                       fontSize: 12),
                                                   focusedBorder:
-                                                  OutlineInputBorder(
+                                                      OutlineInputBorder(
                                                     borderSide: BorderSide(
                                                         color: Colors.white),
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        8),
+                                                        BorderRadius.circular(
+                                                            8),
                                                   ),
                                                   enabledBorder:
-                                                  UnderlineInputBorder(
+                                                      UnderlineInputBorder(
                                                     borderSide: BorderSide(
                                                         color: Colors.white),
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        8),
+                                                        BorderRadius.circular(
+                                                            8),
                                                   ),
                                                 ),
                                               ),
@@ -297,11 +278,11 @@ class CameraSendMission extends StatelessWidget {
                                             child: Text(StringValue.accept,
                                                 style: TextStyle(
                                                     fontFamily:
-                                                    primaryFontFamily,
+                                                        primaryFontFamily,
                                                     fontSize: 15,
                                                     color: Colors.black,
                                                     fontWeight:
-                                                    FontWeight.bold)),
+                                                        FontWeight.bold)),
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                               states.maxLength();
@@ -317,11 +298,11 @@ class CameraSendMission extends StatelessWidget {
                           ),
                         ),
                         Container(
-                            margin: const EdgeInsets.fromLTRB(5, 0, 5, 10),
+                            margin: const EdgeInsets.fromLTRB(5, 0, 5, 5),
                             child: Text(states.dateTime,
                                 style: TextStyle(
                                     fontFamily: primaryFontFamily,
-                                    fontSize: 15,
+                                    fontSize: 13,
                                     color: Colors.grey))),
                       ],
                     ),
@@ -498,8 +479,8 @@ class CameraSendMission extends StatelessWidget {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
                                         width:
-                                        MediaQuery.of(context).size.width /
-                                            1.7,
+                                            MediaQuery.of(context).size.width /
+                                                1.7,
                                         child: Row(
                                           children: [
                                             Icon(
@@ -511,7 +492,7 @@ class CameraSendMission extends StatelessWidget {
                                                     .favoriteLocationValue3,
                                                 style: TextStyle(
                                                     fontFamily:
-                                                    primaryFontFamily,
+                                                        primaryFontFamily,
                                                     fontSize: 15,
                                                     color: Colors.black)),
                                           ],
@@ -524,8 +505,8 @@ class CameraSendMission extends StatelessWidget {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
                                         width:
-                                        MediaQuery.of(context).size.width /
-                                            1.7,
+                                            MediaQuery.of(context).size.width /
+                                                1.7,
                                         child: Row(
                                           children: [
                                             Icon(
@@ -537,7 +518,7 @@ class CameraSendMission extends StatelessWidget {
                                                     .favoriteLocationValue4,
                                                 style: TextStyle(
                                                     fontFamily:
-                                                    primaryFontFamily,
+                                                        primaryFontFamily,
                                                     fontSize: 15,
                                                     color: Colors.black)),
                                           ],
@@ -550,8 +531,8 @@ class CameraSendMission extends StatelessWidget {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
                                         width:
-                                        MediaQuery.of(context).size.width /
-                                            1.7,
+                                            MediaQuery.of(context).size.width /
+                                                1.7,
                                         child: Row(
                                           children: [
                                             Icon(
@@ -563,7 +544,7 @@ class CameraSendMission extends StatelessWidget {
                                                     .notUseFavoriteLocation,
                                                 style: TextStyle(
                                                     fontFamily:
-                                                    primaryFontFamily,
+                                                        primaryFontFamily,
                                                     fontSize: 15,
                                                     color: Colors.black)),
                                           ],
@@ -737,6 +718,7 @@ class CameraSendMission extends StatelessWidget {
                           style: TextStyle(fontSize: 15),
                           textAlign: TextAlign.center,
                           onSaved: (String val) {
+                            print("selectedTime : " + states.selectedTime);
                             states.selectedTime = val;
                           },
                           enabled: false,
@@ -785,9 +767,8 @@ class CameraSendMission extends StatelessWidget {
         child: Container(
             height: 50,
             child: Row(children: [
-              Center(
+              Expanded(
                 child: Container(
-                  width: MediaQuery.of(context).size.width/2.6,
                   child: Text(StringValue.elephantAmount,
                       style: TextStyle(
                           fontFamily: primaryFontFamily,
@@ -796,45 +777,62 @@ class CameraSendMission extends StatelessWidget {
                           fontWeight: FontWeight.bold)),
                 ),
               ),
-              Container(
-                width: 100,
-                child: TextField(
-                  controller: states.textElephantAmount,
-                  maxLines: 1,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    LengthLimitingTextInputFormatter(4),
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: primaryFontFamily,
+                              fontSize: 13,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                          controller: states.textElephantAmount,
+                          maxLines: 1,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            LengthLimitingTextInputFormatter(4),
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Color(0xffF5F5F5),
+                            border: InputBorder.none,
+                            hintText: StringValue.pleaseEnterElephantAmount,
+                            hintStyle: TextStyle(
+                                fontFamily: primaryFontFamily, fontSize: 12),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(StringValue.elephantUnit,
+                              style: TextStyle(
+                                  fontFamily: primaryFontFamily,
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ),
                   ],
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Color(0xffF5F5F5),
-                    border: InputBorder.none,
-                    hintText: StringValue.pleaseEnterElephantAmount,
-                    hintStyle:
-                    TextStyle(fontFamily: primaryFontFamily, fontSize: 12),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: Text(StringValue.elephantUnit,
-                    style: TextStyle(
-                        fontFamily: primaryFontFamily,
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold)),
-              ),
             ])
-          /*child: Row(children: [
+            /*child: Row(children: [
             Flexible(
               child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -873,7 +871,7 @@ class CameraSendMission extends StatelessWidget {
               ),
             ))
           ]),*/
-        ));
+            ));
   }
 
   Container elephantCharacteristics(states, context) {
@@ -918,7 +916,8 @@ class CameraSendMission extends StatelessWidget {
                     child: ToggleButtons(
                       children: <Widget>[
                         Tooltip(
-                          message: StringValue.tooltipEat,textStyle: TextStyle(fontFamily: primaryFontFamily),
+                          message: StringValue.tooltipEat,
+                          textStyle: TextStyle(fontFamily: primaryFontFamily),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Icon(Character.bx_restaurant,
@@ -926,7 +925,8 @@ class CameraSendMission extends StatelessWidget {
                           ),
                         ),
                         Tooltip(
-                          message: StringValue.toolRoad,textStyle: TextStyle(fontFamily: primaryFontFamily),
+                          message: StringValue.toolRoad,
+                          textStyle: TextStyle(fontFamily: primaryFontFamily),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Icon(Character.road_variant,
@@ -934,7 +934,8 @@ class CameraSendMission extends StatelessWidget {
                           ),
                         ),
                         Tooltip(
-                          message: StringValue.toolAngry,textStyle: TextStyle(fontFamily: primaryFontFamily),
+                          message: StringValue.toolAngry,
+                          textStyle: TextStyle(fontFamily: primaryFontFamily),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Icon(Character.bx_angry,
@@ -942,7 +943,8 @@ class CameraSendMission extends StatelessWidget {
                           ),
                         ),
                         Tooltip(
-                          message: StringValue.toolDestroy,textStyle: TextStyle(fontFamily: primaryFontFamily),
+                          message: StringValue.toolDestroy,
+                          textStyle: TextStyle(fontFamily: primaryFontFamily),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Icon(Character.bxs_car_crash,
@@ -1007,6 +1009,11 @@ class CameraSendMission extends StatelessWidget {
           Container(
             child: TextField(
               controller: states.textNote,
+              style: TextStyle(
+                  fontFamily: primaryFontFamily,
+                  fontSize: 13,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
               maxLines: 6,
               keyboardType: TextInputType.multiline,
               inputFormatters: <TextInputFormatter>[
@@ -1018,7 +1025,7 @@ class CameraSendMission extends StatelessWidget {
                 border: InputBorder.none,
                 hintText: StringValue.pleaseEnterDetails,
                 hintStyle:
-                TextStyle(fontFamily: primaryFontFamily, fontSize: 12),
+                    TextStyle(fontFamily: primaryFontFamily, fontSize: 12),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(8),
@@ -1038,75 +1045,75 @@ class CameraSendMission extends StatelessWidget {
   Container submitAndCancel(states, context, vm2) {
     return Container(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
           children: [
-            Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                  child: RoundedButton(
-                    onTap: () {
-                      states.clearData();
-                      // context.read<MenuViewModel>().changePage(0);
-                      Get.offAll(MenuView(username: username,imageUrl: imageUrl));
-                    },
-                    color: btnCancel,
-                    text: StringValue.cancel,
-                    width: 120,
-                    padding: const EdgeInsets.all(2),
-                    radius: 8,
-                    height: 40,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                  child: RoundedButton(
-                    onTap: () async {
-                      // isConnected!!!
-                      if (vm2.isConnected==true) {
-                        Provider.of<LoadingViewModel>(context, listen: false)
-                            .showLoading();
-                        await states.submitValue();
-                        if (states.valueCheck == false) {
-                          Provider.of<LoadingViewModel>(context, listen: false)
-                              .dismissLoading();
-                          // valueNullAlert(states, context);
-                          DialogAlert().dialogNotify(
-                              context,
-                              StringValue.errorValueNull,
-                              StringValue.errorValueNullDetails,
-                              Colors.red);
-                        } else {
-                          Provider.of<LoadingViewModel>(context, listen: false)
-                              .dismissLoading();
-                          await DialogAlert().dialogNotify(
-                              context,
-                              StringValue.sendReportCompleteTitle,
-                              StringValue.sendReportCompleteContent,
-                              Colors.green);
-                          states.clearData();
-                          Get.offAll(MenuView());
-                        }
-                      } else {
-                        reportDisconnected(context);
-                      }
-                    },
-                    color: btnAccept,
-                    text: StringValue.sendMission,
-                    width: 120,
-                    padding: const EdgeInsets.all(2),
-                    radius: 8,
-                    height: 40,
-                  ),
-                ),
-              ],
+            Container(
+              margin: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+              child: RoundedButton(
+                onTap: () {
+                  states.clearData();
+                  // context.read<MenuViewModel>().changePage(0);
+                  Get.offAll(MenuView());
+                },
+                color: btnCancel,
+                text: StringValue.cancel,
+                width: 120,
+                padding: const EdgeInsets.all(2),
+                radius: 8,
+                height: 40,
+              ),
             ),
           ],
-        ));
+        ),
+        Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+              child: RoundedButton(
+                onTap: () async {
+                  // isConnected!!!
+                  if (vm2.isConnected == true) {
+                    Provider.of<LoadingViewModel>(context, listen: false)
+                        .showLoading();
+                    await states.submitValue();
+                    if (states.valueCheck == false) {
+                      Provider.of<LoadingViewModel>(context, listen: false)
+                          .dismissLoading();
+                      // valueNullAlert(states, context);
+                      DialogAlert().dialogNotify(
+                          context,
+                          StringValue.errorValueNull,
+                          StringValue.errorValueNullDetails,
+                          Colors.red);
+                    } else {
+                      Provider.of<LoadingViewModel>(context, listen: false)
+                          .dismissLoading();
+                      await DialogAlert().dialogNotify(
+                          context,
+                          StringValue.sendReportCompleteTitle,
+                          StringValue.sendReportCompleteContent,
+                          Colors.green);
+                      states.clearData();
+                      Get.offAll(MenuView());
+                    }
+                  } else {
+                    reportDisconnected(context);
+                  }
+                },
+                color: btnAccept,
+                text: StringValue.sendMission,
+                width: 120,
+                padding: const EdgeInsets.all(2),
+                radius: 8,
+                height: 40,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ));
   }
 
   //
@@ -1161,34 +1168,34 @@ class CameraSendMission extends StatelessWidget {
     return Consumer<LoadingViewModel>(builder: (context, states, child) {
       return Scaffold(
           body: LoadingOverlay(
-            isLoading: states.isPageLoading,
-            progressIndicator: spinkitLoading,
-            color: overlayLoadingColor,
-            opacity: overlayLoadingOpacity,
-            child: Column(
-              children: [
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Color(0xff616F38), Color(0xffC1DE70)]),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/logo.png',
-                          height: 150,
-                        )
-                      ],
-                    )),
-              ],
-            ),
-          ));
+        isLoading: states.isPageLoading,
+        progressIndicator: spinkitLoading,
+        color: overlayLoadingColor,
+        opacity: overlayLoadingOpacity,
+        child: Column(
+          children: [
+            Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xff616F38), Color(0xffC1DE70)]),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/logo.png',
+                      height: 150,
+                    )
+                  ],
+                )),
+          ],
+        ),
+      ));
     });
   }
 
