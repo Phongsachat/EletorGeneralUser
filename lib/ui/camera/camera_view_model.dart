@@ -303,8 +303,10 @@ class CameraViewModel extends BaseViewModel {
         initialCenter: LatLng(_lat, _lng),
         myLocationButtonEnabled: true,
         layersButtonEnabled: true,
+        language: 'th',
+        initialZoom: 18,
         countries: ['TH'],
-        desiredAccuracy: LocationAccuracy.best,
+        desiredAccuracy: LocationAccuracy.bestForNavigation,
         automaticallyAnimateToCurrentLocation: false,
       );
 
