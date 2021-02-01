@@ -59,10 +59,10 @@ class CameraViewModel extends BaseViewModel {
   List<Placemark> _placemarks;
   int _favoriteLocationValue = 1;
   List<LatLng> _favoriteLocationLatLng = [
-    LatLng(4.557059962689536, 101.40119691280485),
+    LatLng(14.557059962689536, 101.40119691280485),
     LatLng(14.53317426889962, 101.36911111070357),
     LatLng(14.528712016072662, 101.36946594280283),
-    LatLng(4.535288819093966, 101.3848664781)
+    LatLng(14.535288819093966, 101.3848664781)
   ];
 
   //ElephantCharacteristics List
