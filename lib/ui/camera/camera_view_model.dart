@@ -305,6 +305,7 @@ class CameraViewModel extends BaseViewModel {
         layersButtonEnabled: true,
         countries: ['TH'],
         desiredAccuracy: LocationAccuracy.best,
+        automaticallyAnimateToCurrentLocation: false,
       );
 
       _pickedLocation = result;
