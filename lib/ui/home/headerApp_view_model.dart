@@ -1,6 +1,7 @@
 import 'package:Eletor/ui/home/home_view_model.dart';
 import 'package:Eletor/utils/shared_preference.dart';
 import 'package:Eletor/utils/values.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 
@@ -17,9 +18,12 @@ class HeaderAppViewModel extends BaseViewModel{
 
   get isLogOutSuccess => _isLogOutSuccess;
 
+  GoogleSignIn _googleSignIn = GoogleSignIn();
+
   signOut(HomeViewModel vm) async {
     try{
       print("${vm.name} ${vm.position} ${vm.imageUrl} ");
+      await signOutGoogle();
       SharedPreferences pref = await SharedPreferenceUtils.initialize();
 
       SharedPreferenceUtils.clearAll();
@@ -32,5 +36,7 @@ class HeaderAppViewModel extends BaseViewModel{
       print("Error sign out: $error");
     }
   }
-
+signOutGoogle() async {
+  await _googleSignIn.signOut();
+}
 }
