@@ -112,7 +112,7 @@ class SignInView extends StatelessWidget {
       padding: EdgeInsets.all(5),
       height: 50,
       onTap: () async {
-        print("onTap : ");
+        states.showLoading();
 
         // isConnected!!!
         if(vm1.isConnected==false){
@@ -120,20 +120,25 @@ class SignInView extends StatelessWidget {
         }else{
           await vm2.signIn();
           //EasyLoading.show();
-          states.showLoading();
-         // if(await vm2.registerUser(vm2.user.providerData.first)){
-            //EasyLoading.dismiss();
+          if(!vm2.user.isNull){
+            if(await vm2.registerUser(vm2.user.providerData.first)){
+              //EasyLoading.dismiss();
+              states.dismissLoading();
+
+              String imageUrl = vm2.user.photoURL;
+              String username = vm2.user.displayName;
+              String uid = vm2.user.providerData.first.uid;
+
+              await vm2.saveSharePref(uid);
+              await vm2.saveUserInfo(username,imageUrl);
+
+              Get.off(MenuView(imageUrl: imageUrl, username: username,));
+            }else{
+              states.dismissLoading();
+            }
+          }else{
             states.dismissLoading();
-
-            String imageUrl = vm2.user.photoURL;
-            String username = vm2.user.displayName;
-            String uid = vm2.user.providerData.first.uid;
-
-            await vm2.saveSharePref(uid);
-            await vm2.saveUserInfo(username,imageUrl);
-
-            Get.off(MenuView(imageUrl: imageUrl, username: username,));
-        //  }
+          }
         }
         // }else{
         //   print("registerUser : ${vm2.user.providerData.first}");

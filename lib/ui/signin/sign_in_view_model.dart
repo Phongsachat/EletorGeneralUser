@@ -74,7 +74,6 @@ class SignInViewModel extends BaseViewModel {
   signIn() async {
     try{
       GoogleSignInAccount account = await _googleSignIn.signIn();
-
       AuthenticationGoogleSignIn _auth = AuthenticationGoogleSignIn(account);
       await _auth.initializeAuth();
       _user = await _auth.userInfo;
