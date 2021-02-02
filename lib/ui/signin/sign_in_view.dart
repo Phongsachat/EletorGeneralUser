@@ -121,7 +121,7 @@ class SignInView extends StatelessWidget {
           await vm2.signIn();
           //EasyLoading.show();
           states.showLoading();
-          if(await vm2.registerUser(vm2.user.providerData.first)){
+         // if(await vm2.registerUser(vm2.user.providerData.first)){
             //EasyLoading.dismiss();
             states.dismissLoading();
 
@@ -133,7 +133,7 @@ class SignInView extends StatelessWidget {
             await vm2.saveUserInfo(username,imageUrl);
 
             Get.off(MenuView(imageUrl: imageUrl, username: username,));
-          }
+        //  }
         }
         // }else{
         //   print("registerUser : ${vm2.user.providerData.first}");

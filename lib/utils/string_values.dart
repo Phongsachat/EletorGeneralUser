@@ -6,8 +6,9 @@ class StringValue {
   static const usernameHint = "ชื่อผู้ใช้";
   static const passwordHint = "รหัสผ่าน";
   static const googleSignIn = "เข้าสู่ระบบด้วย Google";
-  static const lowLevel = "เฝ้าระวัง";
-  static const highLevel = "เหตุฉุกเฉิน";
+  static const lowLevel = "รุนแรงน้อย";
+  static const middleLevel = "รุนแรงปานกลาง";
+  static const highLevel = "รุนแรงมาก";
   static const detail = "รายละเอียด";
   static const acceptMission = "ร่วมภารกิจ";
   static const notify_history = "ประวัติแจ้งเหตุ";

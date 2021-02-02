@@ -49,7 +49,7 @@ class MissionList extends StatelessWidget {
                 children: <Widget>[
                   (severityId!=null)?
                   Container(padding: EdgeInsets.only(bottom: 5),
-                      child: SeverityLevels(levels: (severityId==1)? Levels.HIGH : Levels.LOW).severityWidget()) :Container(),
+                      child: SeverityLevels(levels: (severityId==2)? Levels.HIGH : (severityId == 1)? Levels.Middle : Levels.LOW).severityWidget()) :Container(),
                   HeaderText(title: _maxLengthTitle),
                   Row(
                     children: <Widget>[

@@ -59,6 +59,8 @@ class MissionCardsViewModel extends ChangeNotifier {
           FireStoreUtils("/comments/$missionID/MissionComments");
       _fireStoreAttendants = FireStoreUtils("/mission/$missionID/attendants");
 
+      _imgOfficerList.clear();
+
       await getAttendants();
       await getComments();
       setMissionID(missionID);
@@ -131,19 +133,26 @@ class MissionCardsViewModel extends ChangeNotifier {
   }
 
   getAttendants() async {
-    try{
-      _imgOfficerList.clear();
-      List<QueryDocumentSnapshot> queryDocsSnapShot = await _fireStoreAttendants
-          .createCollectionRef().get().then((value) => value.docs);
+    try {
+      await _fireStoreAttendants.createCollectionRef().get().then((collect) {
+        collect.docs.forEach((element) async {
+          if (element.data()['isAccept']) {
+            DocumentSnapshot docsSnapShot = await element['uid'].get();
+            if (docsSnapShot.exists) {
 
-      int lengthDocs = queryDocsSnapShot.asMap().length;
+              /// Do not duplicate an image
+              int index = _imgOfficerList.indexWhere((element) => element == docsSnapShot.data()['photoURL']);
 
-      for (int i = 0; i < lengthDocs; i++) {
-        DocumentSnapshot docsSnapShot = await queryDocsSnapShot.asMap()[i].data()['uid'].get();
-        _imgOfficerList.add(docsSnapShot.data()['photoURL']);
-      }
+              if(index==-1){
+                _imgOfficerList.add(docsSnapShot.data()['photoURL']);
+              }
+            }
+          }
+        });
+
+      });
       notifyListeners();
-    }catch(error){
+    } catch (error) {
       print("Error get attendants: $error");
     }
   }

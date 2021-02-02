@@ -5,7 +5,7 @@ import 'package:Eletor/widgets/severitylevels/severity_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-enum Levels { HIGH, LOW }
+enum Levels { HIGH, Middle, LOW }
 
 class SeverityLevels implements SeverityInterfaces {
   String text;
