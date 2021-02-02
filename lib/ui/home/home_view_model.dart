@@ -1,7 +1,5 @@
 import 'package:Eletor/api/action/user_api.dart';
-import 'package:Eletor/api/base_model/base_model.dart';
 import 'package:Eletor/models/user/user_id_model.dart';
-import 'package:Eletor/models/user/user_info_model.dart';
 import 'package:Eletor/utils/googles/firestore.dart';
 import 'package:Eletor/utils/shared_preference.dart';
 import 'package:Eletor/utils/values.dart';
@@ -41,7 +39,6 @@ class HomeViewModel extends BaseViewModel {
     try{
       String authKey = SharedPreferenceUtils.getString(Values.authenicized_key);
       UserIdModel userIdModel = UserIdModel(userId: authKey);
-      // await getUserInformation(userIdModel);
     }catch(error){
       print("Error Init home view model $error");
     }

@@ -95,7 +95,6 @@ class _DirectionMap extends State<DirectionMap>{
                 Provider.of<LoadingViewModel>(context,listen: false).showGoogleMapLoading();
 
                 showPinsOnMap();
-                print("\n\n\n $isWritePolyline \n\n\n");
               },
             ),
           );

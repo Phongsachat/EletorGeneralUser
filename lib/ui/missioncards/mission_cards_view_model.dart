@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:Eletor/utils/googles/firestore.dart';
-import 'package:Eletor/utils/shared_preference.dart';
-import 'package:Eletor/utils/values.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

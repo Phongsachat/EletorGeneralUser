@@ -34,11 +34,13 @@ class SeverityLevels implements SeverityInterfaces {
 
   Color _severityColor() {
     if (levels == Levels.HIGH) return Colors.red;
-    return Colors.yellow[800];
+    if(levels == Levels.Middle) return Colors.orange;
+    return Colors.yellow[600];
   }
 
   String _textLevel() {
     if (levels == Levels.HIGH) return StringValue.highLevel;
+    if(levels == Levels.Middle) return StringValue.middleLevel;
     return StringValue.lowLevel;
   }
 

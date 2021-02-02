@@ -1,18 +1,13 @@
 
 import 'package:Eletor/api/action/user_api.dart';
 import 'package:Eletor/api/base_model/base_model.dart';
-import 'package:Eletor/models/user/login_model.dart';
-import 'package:Eletor/models/user/response_login_model.dart';
 import 'package:Eletor/models/user/response_register_model.dart';
-import 'package:Eletor/models/user/user_id_model.dart';
 import 'package:Eletor/models/user/user_info_account.dart';
-import 'package:Eletor/models/user/user_info_model.dart';
 import 'package:Eletor/utils/googles/authcredential_sign_in.dart';
 import 'package:Eletor/utils/shared_preference.dart';
 import 'package:Eletor/utils/values.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,7 +72,6 @@ class SignInViewModel extends BaseViewModel {
       AuthenticationGoogleSignIn _auth = AuthenticationGoogleSignIn(account);
       await _auth.initializeAuth();
       _user = await _auth.userInfo;
-      print("_user : $_user");
       _signInSuccess(!(user.isNull));
       notifyListeners();
     }catch(error){
@@ -89,34 +83,10 @@ class SignInViewModel extends BaseViewModel {
     if (signInSuccess) {
       _loginStatus = true;
       notifyListeners();
-      //  Get.offNamed(Routes.HOME);
     }
     notifyListeners();
   }
 
-  // signOut() async {
-  //   await _googleSignIn.signOut();
-  //   _user = null;
-  //   _loginStatus = false;
-  //   notifyListeners();
-  // }
-/*
-  authenticizedUser(String username, String password) async {
-
-    LoginModel loginModel = LoginModel(username: username, password: password);
-    BaseModel<ResponseLoginModel> result = await _userApi.authenticized(loginModel);
-    if (result.data.status == 200) {
-
-      String authKey = result.data.data.authenticized;
-     await getUserInformation(UserIdModel(userId: authKey));
-      // _authenticated = true;
-      // notifyListeners();
-
-      saveSharePref(authKey);
-
-    }
-  }
-*/
   saveSharePref(String value) async {
     try{
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -137,13 +107,6 @@ class SignInViewModel extends BaseViewModel {
       print("Error check authentication: $error");
     }
   }
-/*
-  bool checkTextFieldOrNot(TextEditingController _userController,TextEditingController _passController){
-    if(_userController.text.trim().isEmpty) return false;
-    if(_passController.text.trim().isEmpty) return false;
-    return true;
-  }
-*/
 
   saveUserInfo(String displayName ,String image)async{
     try{
@@ -153,19 +116,6 @@ class SignInViewModel extends BaseViewModel {
       print("Error save user info: $error");
     }
   }
-  // showLoading() {
-  //   log("showLoading Active", name: 'showLoading');
-  //   _isPageLoading = true;
-  //   log("_isPageLoading = $isPageLoading");
-  //   notifyListeners();
-  // }
-  //
-  // dismissLoading() {
-  //   log("dismissLoading Active", name: 'dismissLoading');
-  //   _isPageLoading = false;
-  //   log("_isPageLoading = $isPageLoading");
-  //   notifyListeners();
-  // }
 
   Future<bool> registerUser(UserInfo userInfo) async {
     try{
@@ -176,7 +126,6 @@ class SignInViewModel extends BaseViewModel {
           photoURL: userInfo.photoURL,
           uid: userInfo.uid);
 
-      print("serInfo.uid: ${userInfo.uid}");
       BaseModel<ResponseRegisterModel> response = await _userApi.register(infoAcc);
 
       if (response.data.status == 200) return true;

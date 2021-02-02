@@ -22,7 +22,6 @@ class HeaderAppViewModel extends BaseViewModel{
 
   signOut(HomeViewModel vm) async {
     try{
-      print("${vm.name} ${vm.position} ${vm.imageUrl} ");
       await signOutGoogle();
       SharedPreferences pref = await SharedPreferenceUtils.initialize();
 

@@ -19,8 +19,6 @@ class PageTabIndicationPainter extends CustomPainter {
           position.minScrollExtent +
           position.viewportDimension);
       pageOffset = position.extentBefore / fullExtent;
-      //print("pageOffset: $pageOffset");
-      //print("position: ${position.viewportDimension}");
     }
 
     Paint painterIndicator = Paint()

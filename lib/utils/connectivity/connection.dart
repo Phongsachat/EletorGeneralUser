@@ -6,7 +6,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:stacked/stacked.dart';
 
 class ConnectionViewModel extends ChangeNotifier {
   static bool _isConnected = true;

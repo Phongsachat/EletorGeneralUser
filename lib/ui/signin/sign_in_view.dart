@@ -6,14 +6,11 @@ import 'package:Eletor/utils/connectivity/connection.dart';
 import 'package:Eletor/utils/images_utils.dart';
 import 'package:Eletor/utils/string_values.dart';
 import 'package:Eletor/widgets/Loading/LoadingSpinkit.dart';
-import 'package:Eletor/widgets/button/rounded_button.dart';
 import 'package:Eletor/widgets/button/rounded_icon_button.dart';
 import 'package:Eletor/widgets/constants.dart';
-import 'package:Eletor/widgets/text_field/rounded_text_field.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:ndialog/ndialog.dart';
@@ -140,9 +137,6 @@ class SignInView extends StatelessWidget {
             states.dismissLoading();
           }
         }
-        // }else{
-        //   print("registerUser : ${vm2.user.providerData.first}");
-        // }
       },
     );
   }

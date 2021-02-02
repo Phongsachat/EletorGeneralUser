@@ -5,9 +5,7 @@ import 'package:Eletor/ui/missioncards/mission_cards_view.dart';
 import 'package:Eletor/ui/missioncards/mission_cards_view_model.dart';
 import 'package:Eletor/utils/connectivity/connection.dart';
 import 'package:Eletor/utils/googles/firestore.dart';
-import 'package:Eletor/utils/shared_preference.dart';
 import 'package:Eletor/utils/string_values.dart';
-import 'package:Eletor/utils/values.dart';
 import 'package:Eletor/widgets/constants.dart';
 import 'package:Eletor/widgets/mission/mission_list.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -39,7 +37,6 @@ class HomeView extends StatelessWidget {
       return ViewModelBuilder<ConnectionViewModel>.reactive(
           viewModelBuilder: () => ConnectionViewModel(),
           builder: (context, vm2, child) {
-            print("home view isConnected : ${vm2.isConnected}");
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
@@ -213,10 +210,6 @@ class HomeView extends StatelessWidget {
                                                     bool missionReportStatus =
                                                     chunkMission[
                                                     'missionReportStatus'];
-                                                    // print(
-                                                    //     "chunkMission test : $chunkMission");
-
-                                                    // vm1.getCurrentWorking(missionID);
 
                                                     return (missionStatus == 1)
                                                         ? Container()
@@ -255,7 +248,6 @@ class HomeView extends StatelessWidget {
 
                                                                     // isConnected!!!
                                                                     if(vm2.isConnected==true){
-                                                                      print("homeView Select mission");
                                                                       vm1.changeHomeState(
                                                                           false);
 

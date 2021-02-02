@@ -621,7 +621,6 @@ class CameraSendMission extends StatelessWidget {
                           style: TextStyle(fontSize: 15),
                           textAlign: TextAlign.center,
                           onSaved: (String val1) {
-                            print("selectedDate : " + states.selectedDate);
                             states.selectedDate = val1;
                           },
                           enabled: false,
@@ -699,7 +698,6 @@ class CameraSendMission extends StatelessWidget {
                             is24HrFormat: true,
                             onChangeDateTime: (DateTime dateTime) {
                               states.selectTime(dateTime);
-                              print(dateTime);
                             },
                           ),
                         );
@@ -718,7 +716,6 @@ class CameraSendMission extends StatelessWidget {
                           style: TextStyle(fontSize: 15),
                           textAlign: TextAlign.center,
                           onSaved: (String val) {
-                            print("selectedTime : " + states.selectedTime);
                             states.selectedTime = val;
                           },
                           enabled: false,

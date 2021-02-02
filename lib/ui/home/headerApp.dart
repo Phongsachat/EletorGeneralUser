@@ -62,8 +62,6 @@ class HeaderApp extends StatelessWidget {
 
                           await vm1.signOut(vm2);
 
-                          print(vm1.isLogOutSuccess);
-
                           if (vm1.isLogOutSuccess) {
                             notificationSignOut();
                             Get.offNamed(Routes.SIGN_IN);

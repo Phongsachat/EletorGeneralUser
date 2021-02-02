@@ -113,7 +113,6 @@ class CommentViewModel extends BaseViewModel {
 
   setMissionID(String id) {
     _missionID = id;
-    print(_missionID);
   }
 
   @override

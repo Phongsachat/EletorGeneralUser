@@ -61,7 +61,7 @@ List<Marker> setMark(double lat,double lng,String markerId){
       markerId: MarkerId(markerId),
       position: LatLng(lat, lng),
       draggable: true,
-      onDragEnd: (dragEndPosition) {print(dragEndPosition);}));
+      onDragEnd: (dragEndPosition) {}));
 
   return _myMarker;
 }

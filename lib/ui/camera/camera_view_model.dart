@@ -159,7 +159,6 @@ class CameraViewModel extends BaseViewModel {
       loadingValue();
       await locationName();
       goToMe();
-      print("location() working");
       notifyListeners();
     } catch (error) {
       print("Error location $error");
@@ -199,9 +198,6 @@ class CameraViewModel extends BaseViewModel {
       }
 
       maxLength(_textLocationName);
-      // await textLocationNameValue(_placemarks[0].street.toString());
-      // print('${_placemarks[0]}');
-      // print("locationName :" + _placemarks[0].street.toString());
       notifyListeners();
     } catch (error) {
       print("Error location name: $error");
@@ -262,7 +258,6 @@ class CameraViewModel extends BaseViewModel {
           break;
         default:
           {
-            print("favorite Location = 6");
           }
           break;
       }
@@ -282,7 +277,6 @@ class CameraViewModel extends BaseViewModel {
           position: LatLng(_lat, _lng),
           draggable: true,
           onDragEnd: (dragEndPosition) {
-            print(dragEndPosition);
           }));
       GoogleMapController controller = await _controllerCompleter.future;
       controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
@@ -399,7 +393,6 @@ class CameraViewModel extends BaseViewModel {
           position: LatLng(_lat, _lng),
           draggable: true,
           onDragEnd: (dragEndPosition) {
-            print(dragEndPosition);
           }));
       GoogleMapController controller = await _controllerCompleter.future;
       controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
@@ -424,14 +417,12 @@ class CameraViewModel extends BaseViewModel {
       _selectedDate = picked;
       _dateController.text = DateFormat("dd MMM yyyy").format(_selectedDate);
     }
-    print("date : " + _dateController.text);
     timeStamp();
     notifyListeners();
   }
 
   selectTime(dateTime) async {
     try {
-      print("dateTime $dateTime");
       _selectedTime = dateTime;
 
       _hour = _selectedTime.hour.toString();
@@ -442,12 +433,10 @@ class CameraViewModel extends BaseViewModel {
           DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
               _selectedTime.hour, _selectedTime.minute),
           [HH, ':', nn]).toString();
-      print("selectedTime :$_selectedTime $_hour $_minute");
       var sec = (new DateTime.now());
       final dateStr =
           "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_hour}:${_minute}:${sec.second}";
       final formatter = DateFormat(r'''yyyy-mm-dd hh:mm:ss''');
-      print("dateStr :$dateStr");
       final dateTimeFromStr = formatter.parse(dateStr);
       _timeStampValue = dateTimeFromStr.toUtc().millisecondsSinceEpoch;
 
@@ -479,10 +468,6 @@ class CameraViewModel extends BaseViewModel {
           _lng == null) {
         _valueCheck = false;
       } else {
-        print("UserLat: $_userLat");
-        print("UserLng: $_userLng");
-        print("GlobalLat: $_lat");
-        print("GlobalLng: $_lng");
 
         //Initial elephantCharacteristics
         List<ElephantCharacteristics> elephantChaList =
@@ -523,7 +508,6 @@ class CameraViewModel extends BaseViewModel {
         ReportApi reportApi = new ReportApi();
         BaseModel<String> res = await reportApi.sendReport(report);
         log('response: ' + res.data.toString());
-        //print(report.toJson());
         _valueCheck = true;
       }
       notifyListeners();
