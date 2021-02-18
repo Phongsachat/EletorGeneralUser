@@ -6,7 +6,7 @@ import 'package:retrofit/http.dart';
 
 part 'report_services.g.dart';
 
-@RestApi(baseUrl: BaseUrl.itUrl)
+@RestApi(baseUrl: BaseUrl.URL)
 abstract class ReportServices {
   factory ReportServices(Dio dio) = _ReportServices;
 

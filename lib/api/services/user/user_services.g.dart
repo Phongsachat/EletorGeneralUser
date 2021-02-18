@@ -9,7 +9,7 @@ part of 'user_services.dart';
 class _UserServices implements UserServices {
   _UserServices(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://it1.sut.ac.th:9026/eletor/api/';
+    baseUrl ??= 'http://eletor.herokuapp.com/eletor/api/';
   }
 
   final Dio _dio;
